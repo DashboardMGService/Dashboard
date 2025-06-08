@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { 
   PieChart, 
@@ -22,7 +22,8 @@ import {
   AlertTriangle,
   Filter,
   Maximize2,
-  Minimize2
+  Minimize2,
+  X
 } from 'lucide-react';
 
 import StatCard from '../components/StatCard';
@@ -58,11 +59,52 @@ const ComplaintsDashboard: React.FC = () => {
   const comprehensiveAvailableYears = getAvailableYearsFromComplaints(psfComprehensiveComplaintsData);
   const [selectedPsfYear, setSelectedPsfYear] = useState<number>(comprehensiveAvailableYears[0] || new Date().getFullYear());
   const [selectedPsfMonth, setSelectedPsfMonth] = useState<string>(''); // '' for All Months
+
+  // Memoized list of all unique service advisors for search recommendations
+  const allServiceAdvisors = useMemo(() => {
+    const allFlattenedComplaints = flattenComplaintsData(psfComprehensiveComplaintsData); // Get all complaints, no year/month filter
+    const advisors = new Set(allFlattenedComplaints.map(c => c.serviceAdvisor).filter(Boolean)); // Filter out undefined/empty strings
+    return Array.from(advisors).sort();
+  }, []); // Depends only on the base data, so computes once
   
   const [allComplaintsForPeriod, setAllComplaintsForPeriod] = useState<PsfComplaint[]>([]);
+  const [advisorSearchText, setAdvisorSearchText] = useState<string>('');
+  const [selectedAdvisor, setSelectedAdvisor] = useState<string | null>(null);
+  const [advisorRecommendations, setAdvisorRecommendations] = useState<string[]>([]);
 
   // State for PSF Complaints by Type Pie Chart (uses different data source)
   const [psfComplaintTypeData, setPsfComplaintTypeData] = useState<{ name: string; value: number }[]>([]);
+
+  // Effect to update advisor recommendations based on search text
+  useEffect(() => {
+    if (advisorSearchText) {
+      const filteredAdvisors = allServiceAdvisors.filter(advisor =>
+        advisor.toLowerCase().includes(advisorSearchText.toLowerCase())
+      );
+      setAdvisorRecommendations(filteredAdvisors);
+    } else {
+      setAdvisorRecommendations([]);
+    }
+  }, [advisorSearchText, allServiceAdvisors]);
+
+  const handleAdvisorSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setAdvisorSearchText(e.target.value);
+    if (!e.target.value) { // If search text is cleared, also clear selected advisor
+      setSelectedAdvisor(null);
+    }
+  };
+
+  const handleSelectAdvisor = (advisor: string) => {
+    setSelectedAdvisor(advisor);
+    setAdvisorSearchText(advisor); // Populate search bar with selected advisor
+    setAdvisorRecommendations([]); // Hide recommendations
+  };
+
+  const clearSelectedAdvisor = () => {
+    setSelectedAdvisor(null);
+    setAdvisorSearchText('');
+    setAdvisorRecommendations([]);
+  };
 
   const psfMonthsDropdownOptions = [
     { value: '', label: 'All Months' },
@@ -71,13 +113,18 @@ const ComplaintsDashboard: React.FC = () => {
 
   // Effect to load and filter comprehensive complaints data based on year/month selection
   useEffect(() => {
-    const complaints = flattenComplaintsData(
+    let complaints = flattenComplaintsData(
       psfComprehensiveComplaintsData,
       selectedPsfYear,
       selectedPsfMonth === '' ? undefined : selectedPsfMonth
     );
+
+    if (selectedAdvisor) {
+      complaints = complaints.filter(c => c.serviceAdvisor === selectedAdvisor);
+    }
+
     setAllComplaintsForPeriod(complaints);
-  }, [selectedPsfYear, selectedPsfMonth]);
+  }, [selectedPsfYear, selectedPsfMonth, selectedAdvisor]);
 
   // Calculate stats from allComplaintsForPeriod
   const totalComplaints = allComplaintsForPeriod.length;
@@ -97,6 +144,7 @@ const ComplaintsDashboard: React.FC = () => {
     yearData.forEach(monthlyData => {
       if (selectedPsfMonth === '' || monthlyData.month === selectedPsfMonth) {
         monthlyData.records.forEach(advisorRecord => {
+          if (!selectedAdvisor || advisorRecord.advisorName === selectedAdvisor) {
           Object.entries(advisorRecord.complaints).forEach(([type, count]) => {
             if (aggregatedCounts.hasOwnProperty(type)) {
               aggregatedCounts[type] += count;
@@ -106,6 +154,7 @@ const ComplaintsDashboard: React.FC = () => {
               aggregatedCounts[type] = count;
             }
           });
+          }
         });
       }
     });
@@ -115,7 +164,7 @@ const ComplaintsDashboard: React.FC = () => {
       .filter(item => item.value > 0); // Optionally filter out types with zero complaints
 
     setPsfComplaintTypeData(formattedData);
-  }, [selectedPsfYear, selectedPsfMonth, psfDetailedComplaintData]); // Added psfDetailedComplaintData to dependency array
+  }, [selectedPsfYear, selectedPsfMonth, selectedAdvisor, psfDetailedComplaintData, allPsfComplaintTypes]);
   
   // Prepare data for priority distribution from allComplaintsForPeriod
   const priorityData = ['High', 'Medium', 'Low'].map(pLevel => ({
@@ -275,7 +324,7 @@ const ComplaintsDashboard: React.FC = () => {
       {/* PSF Filters Row - Sticky and Styled (Matched to RevenueDashboard) */}
       <motion.div 
         variants={itemVariants} 
-        className="sticky top-0 z-10 w-auto max-w-md mx-auto bg-white/95 backdrop-blur-md rounded-full shadow-lg border border-primary-100 py-2 px-4 mb-4 transform transition-all duration-300 hover:shadow-xl"
+        className="sticky top-0 z-10 w-auto max-w-xl mx-auto bg-white/95 backdrop-blur-md rounded-full shadow-lg border border-primary-100 py-2 px-4 mb-4 transform transition-all duration-300 hover:shadow-xl"
         style={{ boxShadow: '0 4px 20px rgba(67, 97, 238, 0.15)' }}
       >
         <div className="flex items-center justify-center gap-3">
@@ -310,6 +359,46 @@ const ComplaintsDashboard: React.FC = () => {
                 <option key={month.value} value={month.value}>{month.label}</option>
               ))}
             </select>
+          </div>
+
+          {/* Separator */}
+          <div className="h-8 w-px bg-gray-200"></div>
+
+          {/* Advisor Filter */}
+          <div className="flex items-center gap-2 relative">
+            <label htmlFor="advisorSearch" className="text-xs font-medium text-primary-600 whitespace-nowrap">Advisor</label>
+            <div className="flex items-center">
+              <input 
+                type="text"
+                id="advisorSearch"
+                placeholder="Search Advisor..."
+                value={advisorSearchText}
+                onChange={handleAdvisorSearchChange}
+                className="text-sm px-2 py-1 bg-primary-50 border border-primary-200 rounded-md focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-primary-500 text-primary-700 w-40"
+              />
+              {selectedAdvisor && (
+                <button 
+                  onClick={clearSelectedAdvisor} 
+                  className="ml-1 p-1 text-gray-400 hover:text-gray-600"
+                  title="Clear advisor filter"
+                >
+                  <X size={14} />
+                </button>
+              )}
+            </div>
+            {advisorRecommendations.length > 0 && advisorSearchText && !selectedAdvisor && (
+              <ul className="absolute top-full left-0 mt-1 w-full max-h-40 overflow-y-auto bg-white border border-gray-300 rounded-md shadow-lg z-10">
+                {advisorRecommendations.map(advisor => (
+                  <li 
+                    key={advisor}
+                    onClick={() => handleSelectAdvisor(advisor)}
+                    className="px-3 py-2 text-sm hover:bg-primary-100 cursor-pointer"
+                  >
+                    {advisor}
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
         </div>
       </motion.div>
@@ -488,7 +577,8 @@ const ComplaintsDashboard: React.FC = () => {
         </div>
       </div>
       
-      <DataTable
+      <div className="h-96 overflow-y-auto">
+        <DataTable
         data={filteredComplaints}
         columns={[
           { header: 'Complaint ID', accessor: 'id' },
@@ -524,6 +614,7 @@ const ComplaintsDashboard: React.FC = () => {
           { header: 'Type', accessor: 'complaintType' },
         ]}
       />
+      </div>
     </motion.div>
   </motion.div>
 );
