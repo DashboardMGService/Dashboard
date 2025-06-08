@@ -110,7 +110,7 @@ const RevenueDashboard: React.FC = () => {
     dec: 'DEC',
   };
   const [comparisonMetric, setComparisonMetric] = useState<string>('mechRo');
-  const [selectedMonth, setSelectedMonth] = useState<'jan' | 'feb' | 'mar' | 'apr' | 'may' | 'jun' | 'jul' | 'aug' | 'sep' | 'oct' | 'nov' | 'dec'>('jan');
+  const [selectedMonth, setSelectedMonth] = useState<'jan' | 'feb' | 'mar' | 'apr' | 'may' | 'jun' | 'jul' | 'aug' | 'sep' | 'oct' | 'nov' | 'dec'>('jun'); 
   const [selectedYear, setSelectedYear] = useState<number>(2025);
 
   // State for Top Advisors by Revenue chart
