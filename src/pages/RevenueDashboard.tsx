@@ -32,21 +32,33 @@ import {
   Briefcase // Added Briefcase icon
 } from 'lucide-react';
 
+// Define types for the new state variables
+interface TopAdvisorData {
+  advisorName: string;
+  totalRevenue: number;
+}
+
+// Using AdvisorMonthlyPerformance directly for table data, will add calculated totalRevenue to it
+interface ProcessedAdvisorPerformance extends AdvisorMonthlyPerformance {
+  calculatedTotalRevenue: number;
+}
+
 import StatCard from '../components/StatCard';
 import DataTable from '../components/DataTable';
-import PeriodComparisonCharts, { PeriodComparisonChartsProps } from '../components/PeriodComparisonCharts';
+import PeriodComparisonCharts from '../components/PeriodComparisonCharts';
 import {
   monthlyKpiData, // Corrected: From ../data/index.ts
-  previousYearData, // Corrected: From ../data/index.ts
+  // previousYearData, // Corrected: From ../data/index.ts
 } from '../data';
 import {
-  getMonthlyServiceAdvisors, 
   getCombinedMonthlyData,   
   calculateTotalRevenue    
 } from '../data/serviceAdvisorRevenue';
 import { yearOnYearComparisonData, MonthlyComparisonData as YearOnYearMonthlyData } from '../data/yearOnYearComparisonData';
 import { yearOnYearComparisonData as kpiSourceData } from '../data/kpiCardData.ts';
 import { tillDateComparisonData } from '../data/tillDateComparisonData';
+import { detailedRevenueBreakdownData, MonthlyRevenueBreakdownEntry } from '../data/revenueInsightsData';
+import { allServiceAdvisorYearlyPerformance, AdvisorMonthlyPerformance } from '../data/advisorPerformanceData';
 
 // Local interface for data used in currentYearTotals and previousYearTotals
 interface MonthlyTotalsData {
@@ -88,7 +100,13 @@ const RevenueDashboard: React.FC = () => {
   };
   const [comparisonMetric, setComparisonMetric] = useState<string>('mechRo');
   const [selectedMonth, setSelectedMonth] = useState<'jan' | 'feb' | 'mar' | 'apr' | 'may' | 'jun' | 'jul' | 'aug' | 'sep' | 'oct' | 'nov' | 'dec'>('jan');
-  const [selectedYear, setSelectedYear] = useState<number>(2025); 
+  const [selectedYear, setSelectedYear] = useState<number>(2025);
+
+  // State for Top Advisors by Revenue chart
+  const [topAdvisorsData, setTopAdvisorsData] = useState<TopAdvisorData[]>([]);
+  // State for Service Advisor Performance Table
+  const [advisorPerformanceTableData, setAdvisorPerformanceTableData] = useState<ProcessedAdvisorPerformance[]>([]);
+
   
   // State for KPI card values derived from kpiSourceData
   const [kpiCardValues, setKpiCardValues] = useState<{
@@ -109,10 +127,63 @@ const RevenueDashboard: React.FC = () => {
     labour: 0,
     parts: 0,
     accessories: 0,
+    lubricant: 0, // Added for pie chart
     vas: 0, // Placeholder, as kpiSourceData doesn't have explicit VAS
     totalRevenue: 0,
     serviceAdvisorCount: 0 // Placeholder for mechData.length + bodyData.length
   });
+
+  // New useEffect for processing allServiceAdvisorYearlyPerformance
+  React.useEffect(() => {
+    const currentYearData = allServiceAdvisorYearlyPerformance.find(yearData => yearData.year === selectedYear);
+    if (!currentYearData) {
+      setTopAdvisorsData([]);
+      setAdvisorPerformanceTableData([]);
+      return;
+    }
+
+    const monthMap: { [key: string]: string } = {
+      jan: "January", feb: "February", mar: "March", apr: "April", may: "May", jun: "June",
+      jul: "July", aug: "August", sep: "September", oct: "October", nov: "November", dec: "December"
+    };
+    const currentMonthStr = monthMap[selectedMonth];
+    const currentMonthPerformance = currentYearData.monthlyBreakdown.find(monthData => monthData.month === currentMonthStr);
+
+    if (!currentMonthPerformance || !currentMonthPerformance.advisors) {
+      setTopAdvisorsData([]);
+      setAdvisorPerformanceTableData([]);
+      return;
+    }
+
+    const processedAdvisors: ProcessedAdvisorPerformance[] = currentMonthPerformance.advisors.map(advisor => {
+      const revenueItems = advisor.revenueItems;
+      const calculatedTotalRevenue = (
+        (revenueItems["VAS (INR)"] || 0) +
+        (revenueItems["LAB"] || 0) +
+        (revenueItems["ACCES"] || 0) +
+        (revenueItems["LUB"] || 0) +
+        (revenueItems["Brake Pad (INR)"] || 0) +
+        (revenueItems["Wiper Blade (INR)"] || 0) +
+        (revenueItems["Washer Fluid (INR)"] || 0) +
+        (revenueItems["Wheel Alignment (INR)"] || 0) +
+        (revenueItems["BAT (INR)"] || 0) +
+        (revenueItems["TYRE (INR)"] || 0) +
+        (revenueItems["Parts (INR)"] || 0)
+      );
+      return {
+        ...advisor,
+        calculatedTotalRevenue
+      };
+    });
+
+    // Prepare data for Top Advisors chart (e.g., top 5)
+    const sortedAdvisors = [...processedAdvisors].sort((a, b) => b.calculatedTotalRevenue - a.calculatedTotalRevenue);
+    setTopAdvisorsData(sortedAdvisors.slice(0, 5).map(adv => ({ advisorName: adv.advisorName, totalRevenue: adv.calculatedTotalRevenue })));
+
+    // Set data for the performance table
+    setAdvisorPerformanceTableData(processedAdvisors);
+
+  }, [selectedMonth, selectedYear, allServiceAdvisorYearlyPerformance]);
 
   // Effect to update KPI card values when selectedMonth or selectedYear changes
   React.useEffect(() => {
@@ -175,27 +246,54 @@ const RevenueDashboard: React.FC = () => {
         }
       });
 
-      // Update data source for other charts
+      // Fetch data for pie chart from detailedRevenueBreakdownData
+      const insightsEntry = detailedRevenueBreakdownData.find(
+        (entry: MonthlyRevenueBreakdownEntry) => entry.month === currentMonthStr
+      );
+
+      let pieLabour = 0;
+      let pieParts = 0;
+      let pieAccessories = 0;
+      let pieLubricant = 0;
+
+      if (insightsEntry) {
+        const yearStr = selectedYear.toString() as '2024' | '2025';
+        const yearData = insightsEntry.data[yearStr];
+        if (yearData) {
+          pieLabour = yearData.labour?.actual || 0;
+          pieParts = yearData.parts?.actual || 0;
+          pieAccessories = yearData.accessories?.actual || 0;
+          pieLubricant = yearData.lubricant?.actual || 0;
+        }
+      }
+
+      // Update data source for charts
       setChartDataSource({
-        throughput: currentThroughput,
-        labour: currentLabourRevenue,
-        parts: currentPartsRevenue,
-        accessories: currentAccessoriesRevenue,
+        throughput: currentThroughput, // From kpiSourceData
+        labour: pieLabour, // From detailedRevenueBreakdownData for pie chart
+        parts: pieParts, // From detailedRevenueBreakdownData for pie chart
+        accessories: pieAccessories, // From detailedRevenueBreakdownData for pie chart
+        lubricant: pieLubricant, // From detailedRevenueBreakdownData for pie chart
         vas: 0, // Placeholder for VAS
-        totalRevenue: currentTotalRevenue,
+        totalRevenue: currentTotalRevenue, // Calculated from kpiSourceData parts/labour/accessories
         serviceAdvisorCount: currentThroughput // Using total ROs as a proxy for service advisor activity count
       });
 
     } else {
       // Reset if data for month not found
-      setKpiCardValues({ throughput: 0, throughputPrev: 0, labourRevenue: 0, labourRevenuePrev: 0, partsRevenue: 0, partsRevenuePrev: 0, totalRevenue: 0, totalRevenuePrev: 0 });
-      setChartDataSource({ throughput: 0, labour: 0, parts: 0, accessories: 0, vas: 0, totalRevenue: 0, serviceAdvisorCount: 0 });
+      setKpiCardValues({
+        throughput: { current: 0, previous: 0, percentChange: 0 },
+        labourRevenue: { current: 0, previous: 0, percentChange: 0 },
+        partsRevenue: { current: 0, previous: 0, percentChange: 0 },
+        totalRevenue: { current: 0, previous: 0, percentChange: 0 },
+      });
+      setChartDataSource({ throughput: 0, labour: 0, parts: 0, accessories: 0, lubricant: 0, vas: 0, totalRevenue: 0, serviceAdvisorCount: 0 });
     }
   }, [selectedMonth, selectedYear]);
 
   // For backward compatibility with the existing dashboard
   const currentYearData = monthlyKpiData;
-  const previousYearEquivalent = previousYearData;
+  // const previousYearEquivalent = previousYearData;
   
   const currentYearTotals = {
     mechRo: currentYearData.reduce((sum: number, month: MonthlyTotalsData) => sum + month.mechRo, 0),
@@ -205,13 +303,13 @@ const RevenueDashboard: React.FC = () => {
     labourRevenue: currentYearData.reduce((sum: number, month: MonthlyTotalsData) => sum + (month.labourRevenue || 0), 0),
   };
   
-  const previousYearTotals = {
-    mechRo: previousYearEquivalent.reduce((sum: number, month: MonthlyTotalsData) => sum + month.mechRo, 0),
-    bpRo: previousYearEquivalent.reduce((sum: number, month: MonthlyTotalsData) => sum + month.bpRo, 0),
-    accessoriesRo: previousYearEquivalent.reduce((sum: number, month: MonthlyTotalsData) => sum + month.accessoriesRo, 0),
-    partsRevenue: previousYearEquivalent.reduce((sum: number, month: MonthlyTotalsData) => sum + (month.partsRevenue || 0), 0),
-    labourRevenue: previousYearEquivalent.reduce((sum: number, month: MonthlyTotalsData) => sum + (month.labourRevenue || 0), 0),
-  };
+  // const previousYearTotals = {
+  //   mechRo: previousYearEquivalent.reduce((sum: number, month: MonthlyTotalsData) => sum + month.mechRo, 0),
+  //   bpRo: previousYearEquivalent.reduce((sum: number, month: MonthlyTotalsData) => sum + month.bpRo, 0),
+  //   accessoriesRo: previousYearEquivalent.reduce((sum: number, month: MonthlyTotalsData) => sum + month.accessoriesRo, 0),
+  //   partsRevenue: previousYearEquivalent.reduce((sum: number, month: MonthlyTotalsData) => sum + (month.partsRevenue || 0), 0),
+  //   labourRevenue: previousYearEquivalent.reduce((sum: number, month: MonthlyTotalsData) => sum + (month.labourRevenue || 0), 0),
+  // };
   
   // Calculate percentage changes for the original data (not used with new data structure)
   // This is kept for backward compatibility with other parts of the dashboard
@@ -262,34 +360,22 @@ const RevenueDashboard: React.FC = () => {
   });
   
   // Get all service advisors for the selected month and year
-  const allAdvisors = getCombinedMonthlyData(selectedYear, selectedMonth);
   
   // Prepare data for the radial bar chart - using the new data structure
-  const radialData = [
-    { name: 'Throughput', value: chartDataSource.throughput, fill: '#4361ee' },
-    { name: 'RO Count', value: chartDataSource.serviceAdvisorCount, fill: '#7209b7' }, // Changed label from 'Service Advisors'
-    { name: 'Revenue (Lakhs)', value: Math.round(chartDataSource.totalRevenue / 100000), fill: '#f72585' },
-  ];
+  // const radialData = [
+  //   { name: 'Throughput', value: chartDataSource.throughput, fill: '#4361ee' },
+  //   { name: 'RO Count', value: chartDataSource.serviceAdvisorCount, fill: '#7209b7' }, // Changed label from 'Service Advisors'
+  //   { name: 'Revenue (Lakhs)', value: Math.round(chartDataSource.totalRevenue / 100000), fill: '#f72585' },
+  // ];
   
   // Prepare data for the revenue breakdown pie chart using the new data structure
   const revenueBreakdown = [
     { name: 'Labor', value: chartDataSource.labour, color: '#4361ee' },
     { name: 'Parts', value: chartDataSource.parts, color: '#7209b7' },
     { name: 'Accessories', value: chartDataSource.accessories, color: '#fb8500' },
+    { name: 'Lubricant', value: chartDataSource.lubricant, color: '#ffc658' }, // Added Lubricant
   ];
   
-  // Prepare data for service advisor revenue chart using the new data structure
-  const advisorRevenueData = allAdvisors.slice(0, 10).map((advisor, index) => ({
-    name: advisor.name.split(' ')[0], // First name only for chart clarity
-    revenue: calculateTotalRevenue(advisor),
-    throughput: advisor.throughput,
-    labour: advisor.lab,
-    parts: advisor.parts,
-    color: [
-      '#4361ee', '#7209b7', '#f72585', '#fb8500', '#2ec4b6',
-      '#3a86ff', '#8338ec', '#ff006e', '#ffbe0b', '#06d6a0'
-    ][index % 10] // Use modulo to handle more than 10 advisors
-  }));
 
   // Prepare data for radial bar chart
   const radialBarData = [
@@ -712,7 +798,7 @@ const RevenueDashboard: React.FC = () => {
                   paddingAngle={3}
                   animationDuration={1500}
                   animationEasing="ease-out"
-                  label={({ name, percent }) => {
+                  label={({ name: _name, percent }) => {
                     return percent > 0.1 ? `${(percent * 100).toFixed(0)}%` : '';
                   }}
                   activeIndex={Array.from({ length: revenueBreakdown.length }, (_, i) => i)}
@@ -743,7 +829,7 @@ const RevenueDashboard: React.FC = () => {
                     );
                   }}
                 >
-                  {revenueBreakdown.map((entry, index) => (
+                  {revenueBreakdown.map((_entry, index) => (
                     <Cell 
                       key={`cell-${index}`} 
                       fill={`url(#pieGradient-${index})`} 
@@ -821,7 +907,7 @@ const RevenueDashboard: React.FC = () => {
                   animationDuration={1800}
                   animationEasing="ease-out"
                 >
-                  {radialBarData.map((entry, index) => (
+                  {radialBarData.map((_entry, index) => (
                     <Cell 
                       key={`cell-${index}`} 
                       fill={`url(#radialGradient-${index})`}
@@ -838,9 +924,8 @@ const RevenueDashboard: React.FC = () => {
                   wrapperStyle={{
                     paddingLeft: '10px'
                   }}
-                  formatter={(value, _entry, index) => {
-                    const { fill } = radialBarData[index];
-                    return <span style={{ color: fill, fontWeight: 600 }}>{value}</span>;
+                  formatter={(value, _entry, _index) => {
+                    return <span>{value}</span>;
                   }}
                 />
                 <Tooltip 
@@ -871,7 +956,7 @@ const RevenueDashboard: React.FC = () => {
           <div className="h-72">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart
-                data={advisorRevenueData}
+                data={topAdvisorsData}
                 margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
               >
                 <defs>
@@ -893,7 +978,7 @@ const RevenueDashboard: React.FC = () => {
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" opacity={0.4} vertical={false} />
                 <XAxis 
-                  dataKey="name" 
+                  dataKey="advisorName" 
                   tick={{ fill: '#6b7280', fontSize: 12, fontWeight: 500 }}
                   axisLine={{ stroke: '#e5e7eb' }}
                   tickLine={false}
@@ -916,7 +1001,7 @@ const RevenueDashboard: React.FC = () => {
                   cursor={{ fill: 'rgba(67, 97, 238, 0.1)' }}
                 />
                 <Bar 
-                  dataKey="revenue" 
+                  dataKey="totalRevenue" 
                   fill="url(#colorGradient)" 
                   radius={[6, 6, 0, 0]}
                   barSize={40}
@@ -925,7 +1010,7 @@ const RevenueDashboard: React.FC = () => {
                   filter="url(#shadow)"
                 >
                   <LabelList 
-                    dataKey="revenue" 
+                    dataKey="totalRevenue" 
                     position="top" 
                     formatter={(value: number) => `₹${(value/1000).toFixed(0)}k`}
                     style={{ fontSize: 10, fill: '#6b7280', fontWeight: 'bold' }}
@@ -1003,54 +1088,30 @@ const RevenueDashboard: React.FC = () => {
         
         <div style={{ maxHeight: '400px', overflow: 'auto', width: '100%' }}>
           <div style={{ minWidth: '2000px' }}>
-          <DataTable
-            data={allAdvisors}
-            searchable={true}
-            columns={[
-            { header: 'Service Advisor', accessor: 'name' },
-            { header: 'Throughput', accessor: 'throughput' },
-            { 
-              header: 'VAS (₹)', 
-              accessor: (row) => `₹${row.vas.toLocaleString()}`,
-              className: 'text-right'
-            },
-            { 
-              header: 'Labour', 
-              accessor: (row) => `₹${row.lab.toLocaleString()}`,
-              className: 'text-right'
-            },
-            { 
-              header: 'Accessories', 
-              accessor: (row) => `₹${row.acces.toLocaleString()}`,
-              className: 'text-right'
-            },
-            { 
-              header: 'Lubricants', 
-              accessor: (row) => `₹${row.lub.toLocaleString()}`,
-              className: 'text-right'
-            },
-            { 
-              header: 'Battery', 
-              accessor: (row) => `₹${row.bat.toLocaleString()}`,
-              className: 'text-right'
-            },
-            { 
-              header: 'Tyre', 
-              accessor: (row) => `₹${row.tyre.toLocaleString()}`,
-              className: 'text-right'
-            },
-            { 
-              header: 'Parts', 
-              accessor: (row) => `₹${row.parts.toLocaleString()}`,
-              className: 'text-right'
-            },
-            { 
-              header: 'Total Revenue', 
-              accessor: (row) => `₹${calculateTotalRevenue(row).toLocaleString()}`,
-              className: 'font-semibold text-right'
-            },
-          ]}
-          />
+            <DataTable
+              data={advisorPerformanceTableData}
+              searchable={true}
+              columns={[
+                { header: 'Service Advisor', accessor: (row: ProcessedAdvisorPerformance) => row.advisorName },
+                { header: 'Throughput', accessor: (row: ProcessedAdvisorPerformance) => row.throughput, className: 'text-right' },
+                { header: 'VAS (₹)', accessor: (row: ProcessedAdvisorPerformance) => formatIndianCurrency(row.revenueItems["VAS (INR)"]), className: 'text-right' },
+                { header: 'Labour (₹)', accessor: (row: ProcessedAdvisorPerformance) => formatIndianCurrency(row.revenueItems["LAB"]), className: 'text-right' },
+                { header: 'Accessories (₹)', accessor: (row: ProcessedAdvisorPerformance) => formatIndianCurrency(row.revenueItems["ACCES"]), className: 'text-right' },
+                { header: 'Lubricants (₹)', accessor: (row: ProcessedAdvisorPerformance) => formatIndianCurrency(row.revenueItems["LUB"]), className: 'text-right' },
+                { header: 'Brake Pad (₹)', accessor: (row: ProcessedAdvisorPerformance) => formatIndianCurrency(row.revenueItems["Brake Pad (INR)"]), className: 'text-right' },
+                { header: 'Brake Pad (Nos)', accessor: (row: ProcessedAdvisorPerformance) => row.revenueItems["Brake Pad (Nos)"], className: 'text-right' },
+                { header: 'Wiper Blade (₹)', accessor: (row: ProcessedAdvisorPerformance) => formatIndianCurrency(row.revenueItems["Wiper Blade (INR)"]), className: 'text-right' },
+                { header: 'Wiper Blade (Nos)', accessor: (row: ProcessedAdvisorPerformance) => row.revenueItems["Wiper Blade (Nos)"], className: 'text-right' },
+                { header: 'Washer Fluid (₹)', accessor: (row: ProcessedAdvisorPerformance) => formatIndianCurrency(row.revenueItems["Washer Fluid (INR)"]), className: 'text-right' },
+                { header: 'Washer Fluid (Nos)', accessor: (row: ProcessedAdvisorPerformance) => row.revenueItems["Washer Fluid (Nos)"], className: 'text-right' },
+                { header: 'Wheel Align. (₹)', accessor: (row: ProcessedAdvisorPerformance) => formatIndianCurrency(row.revenueItems["Wheel Alignment (INR)"]), className: 'text-right' },
+                { header: 'Wheel Align. (Nos)', accessor: (row: ProcessedAdvisorPerformance) => row.revenueItems["Wheel Alignment (Nos)"], className: 'text-right' },
+                { header: 'Battery (₹)', accessor: (row: ProcessedAdvisorPerformance) => formatIndianCurrency(row.revenueItems["BAT (INR)"]), className: 'text-right' },
+                { header: 'Battery (Nos)', accessor: (row: ProcessedAdvisorPerformance) => row.revenueItems["BAT (Nos)"], className: 'text-right' },
+                { header: 'Parts (₹)', accessor: (row: ProcessedAdvisorPerformance) => formatIndianCurrency(row.revenueItems["Parts (INR)"]), className: 'text-right' },
+                { header: 'Total Revenue (₹)', accessor: (row: ProcessedAdvisorPerformance) => formatIndianCurrency(row.calculatedTotalRevenue), className: 'font-semibold text-right' }
+              ]}
+            />
           </div>
         </div>
       </motion.div>
