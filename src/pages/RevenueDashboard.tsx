@@ -77,6 +77,17 @@ const formatIndianCurrency = (value: number | undefined): string => {
   return `₹${value.toLocaleString('en-IN', { maximumFractionDigits: 0 })}`;
 };
 
+interface MonthlyTrendItem {
+  month: string;
+  partsRevenue: number;
+  labourRevenue: number;
+  accessoriesRevenue: number;
+  vasRevenue: number;
+  lubricantsRevenue: number;
+  throughput: number;
+  totalRevenue: number;
+}
+
 interface KpiValue {
   current: number;
   previous: number;
@@ -106,6 +117,8 @@ const RevenueDashboard: React.FC = () => {
   const [topAdvisorsData, setTopAdvisorsData] = useState<TopAdvisorData[]>([]);
   // State for Service Advisor Performance Table
   const [advisorPerformanceTableData, setAdvisorPerformanceTableData] = useState<ProcessedAdvisorPerformance[]>([]);
+  const [monthlyTrendsChartData, setMonthlyTrendsChartData] = useState<MonthlyTrendItem[]>([]);
+  const [selectedTrendMetricKey, setSelectedTrendMetricKey] = useState<keyof MonthlyTrendItem>('totalRevenue');
 
   
   // State for KPI card values derived from kpiSourceData
@@ -184,6 +197,97 @@ const RevenueDashboard: React.FC = () => {
     setAdvisorPerformanceTableData(processedAdvisors);
 
   }, [selectedMonth, selectedYear, allServiceAdvisorYearlyPerformance]);
+
+  // Effect to calculate monthly performance trends for the selected year
+  React.useEffect(() => {
+    if (!allServiceAdvisorYearlyPerformance || allServiceAdvisorYearlyPerformance.length === 0) {
+      setMonthlyTrendsChartData([]);
+      return;
+    }
+
+    const monthsOrder = [
+      "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+      "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+    ];
+
+    const yearData = allServiceAdvisorYearlyPerformance.find(item => item.year === selectedYear);
+
+    if (!yearData) {
+      setMonthlyTrendsChartData([]);
+      return;
+    }
+
+    const monthNameMapping: { [key: string]: string } = {
+      "January": "Jan", "February": "Feb", "March": "Mar", "April": "Apr",
+      "May": "May", "June": "Jun", "July": "Jul", "August": "Aug",
+      "September": "Sep", "October": "Oct", "November": "Nov", "December": "Dec"
+    };
+
+    const trendsData = monthsOrder.map(shortMonthName => {
+      const fullMonthName = Object.keys(monthNameMapping).find(key => monthNameMapping[key] === shortMonthName);
+      const monthEntry = yearData.monthlyBreakdown.find(mb => mb.month === fullMonthName);
+
+      let totalPartsRevenue = 0;
+      let totalLabourRevenue = 0;
+      let totalAccessoriesRevenue = 0;
+      let totalVasRevenue = 0;
+      let totalLubricantsRevenue = 0;
+      let totalThroughput = 0;
+      let overallTotalRevenue = 0;
+
+      if (monthEntry) {
+        monthEntry.advisors.forEach(advisorPerf => {
+          const items = advisorPerf.revenueItems;
+          totalPartsRevenue += items["Parts (INR)"] || 0;
+          totalLabourRevenue += items["LAB"] || 0;
+          totalAccessoriesRevenue += items["ACCES"] || 0;
+          totalVasRevenue += items["VAS (INR)"] || 0;
+          totalLubricantsRevenue += items["LUB"] || 0;
+          totalThroughput += advisorPerf.throughput || 0;
+          
+          // Calculate total revenue for this advisor for this month
+          let advisorMonthlyTotal = 0;
+          advisorMonthlyTotal += items["Parts (INR)"] || 0;
+          advisorMonthlyTotal += items["LAB"] || 0;
+          advisorMonthlyTotal += items["ACCES"] || 0;
+          advisorMonthlyTotal += items["VAS (INR)"] || 0;
+          advisorMonthlyTotal += items["LUB"] || 0;
+          advisorMonthlyTotal += items["Brake Pad (INR)"] || 0;
+          advisorMonthlyTotal += items["Wiper Blade (INR)"] || 0;
+          advisorMonthlyTotal += items["Washer Fluid (INR)"] || 0;
+          advisorMonthlyTotal += items["Wheel Alignment (INR)"] || 0;
+          advisorMonthlyTotal += items["BAT (INR)"] || 0;
+          // Note: TYRE (INR) was removed from table, but should be part of total if present in data
+          advisorMonthlyTotal += items["TYRE (INR)"] || 0; 
+          overallTotalRevenue += advisorMonthlyTotal;
+        });
+      }
+
+      return {
+        month: shortMonthName,
+        partsRevenue: totalPartsRevenue,
+        labourRevenue: totalLabourRevenue,
+        accessoriesRevenue: totalAccessoriesRevenue,
+        vasRevenue: totalVasRevenue,
+        lubricantsRevenue: totalLubricantsRevenue,
+        throughput: totalThroughput,
+        totalRevenue: overallTotalRevenue,
+      };
+    });
+
+    setMonthlyTrendsChartData(trendsData);
+
+  }, [selectedYear, allServiceAdvisorYearlyPerformance]);
+
+  const trendMetricsOptions: { value: keyof MonthlyTrendItem; label: string; isCurrency: boolean }[] = [
+    { value: 'totalRevenue', label: 'Total Revenue', isCurrency: true },
+    { value: 'partsRevenue', label: 'Parts Revenue', isCurrency: true },
+    { value: 'labourRevenue', label: 'Labour Revenue', isCurrency: true },
+    { value: 'accessoriesRevenue', label: 'Accessories Revenue', isCurrency: true },
+    { value: 'vasRevenue', label: 'VAS Revenue', isCurrency: true },
+    { value: 'lubricantsRevenue', label: 'Lubricants Revenue', isCurrency: true },
+    { value: 'throughput', label: 'Throughput (Nos)', isCurrency: false },
+  ];
 
   // Effect to update KPI card values when selectedMonth or selectedYear changes
   React.useEffect(() => {
@@ -1022,11 +1126,22 @@ const RevenueDashboard: React.FC = () => {
         </motion.div>
         
         <motion.div variants={itemVariants} className="card">
-          <h2 className="text-lg font-bold mb-4">Monthly Performance Trends</h2>
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-lg font-bold">Monthly Performance Trends</h2>
+            <select 
+              value={selectedTrendMetricKey}
+              onChange={(e) => setSelectedTrendMetricKey(e.target.value as keyof MonthlyTrendItem)}
+              className="p-2 border rounded-md bg-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              {trendMetricsOptions.map(option => (
+                <option key={option.value} value={option.value}>{option.label}</option>
+              ))}
+            </select>
+          </div>
           <div className="h-72">
             <ResponsiveContainer width="100%" height="100%">
               <ComposedChart
-                data={monthlyKpiData}
+                data={monthlyTrendsChartData} // Use new dynamic data
                 margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
               >
                 <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
@@ -1035,14 +1150,8 @@ const RevenueDashboard: React.FC = () => {
                   tick={{ fill: '#6b7280', fontSize: 12 }}
                   axisLine={{ stroke: '#e5e7eb' }}
                 />
-                <YAxis 
-                  yAxisId="left"
-                  tick={{ fill: '#6b7280', fontSize: 12 }}
-                  axisLine={{ stroke: '#e5e7eb' }}
-                />
-                <YAxis 
-                  yAxisId="right"
-                  orientation="right"
+                {/* Single YAxis for Parts Revenue. If other metrics are added later with different scales, re-add appropriate YAxes */}
+                <YAxis
                   tick={{ fill: '#6b7280', fontSize: 12 }}
                   axisLine={{ stroke: '#e5e7eb' }}
                 />
@@ -1054,15 +1163,20 @@ const RevenueDashboard: React.FC = () => {
                     boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
                     padding: '0.75rem'
                   }}
+                  formatter={(value: number, name: string, props: any) => {
+                    const metricOption = trendMetricsOptions.find(opt => opt.value === props.dataKey);
+                    if (metricOption?.isCurrency) {
+                      return [formatIndianCurrency(value), name];
+                    }
+                    return [value.toLocaleString(), name]; // Format as plain number for non-currency
+                  }} // Format tooltip value
                 />
                 <Legend />
-                <Bar yAxisId="left" dataKey="mechRo" name="Mechanical ROs" fill="#4361ee" />
-                <Bar yAxisId="left" dataKey="bpRo" name="BP ROs" fill="#7209b7" />
+                {/* mechRo and bpRo Bars removed as data is not available in current structure */}
                 <Line
-                  yAxisId="right"
                   type="monotone"
-                  dataKey="2025"
-                  name="Parts Revenue"
+                  dataKey={selectedTrendMetricKey}
+                  name={trendMetricsOptions.find(opt => opt.value === selectedTrendMetricKey)?.label || ''}
                   stroke="#f72585"
                   strokeWidth={2}
                   dot={{ fill: '#f72585', r: 4, strokeWidth: 2, stroke: '#ffffff' }} 
