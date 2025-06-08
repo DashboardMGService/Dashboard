@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
+import { ChevronsDownUp, ChevronUp } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { Maximize2, Minimize2 } from 'lucide-react';
+
 import {
   BarChart,
   Line,
@@ -17,15 +18,19 @@ import {
 } from 'recharts';
 
 import { MtdKpiMetricSet, YtdComparisonDataType } from '../data/tillDateComparisonData'; // Adjust path if necessary
+import { MonthlyComparisonData } from '../data/yearOnYearComparisonData'; // Added for expanded view
 
 export type PeriodMetricKey = 'totalRevenue' | 'labourRevenue' | 'partsRevenue' | 'accessoriesRevenue' | 'throughput';
 
 export interface PeriodComparisonChartsProps {
   ytdSummaryData: YtdComparisonDataType;
   mtdDataForSelectedMonth: MtdKpiMetricSet | null;
+  allMonthsComparisonData: MonthlyComparisonData[]; // For expanded MTD view
   selectedMonthLabel: string; // e.g., "JUN"
   currentYear: number; // e.g., 2025
   previousYear: number; // e.g., 2024
+  isExpanded: boolean; // Controls overall expansion
+  onToggleExpand: () => void; // For expanded MTD view
 }
 
 // type RevenueCategory = 'totalRevenue' | 'labor' | 'parts' | 'accessories' | 'lubricants' | 'battery' | 'tyre'; // Old type
@@ -43,14 +48,20 @@ export interface PeriodComparisonChartsProps {
 // };
 
 // Helper function to get display label for metric keys
-const getMetricLabel = (metric: PeriodMetricKey): string => {
+const getMetricLabel = (metric: PeriodMetricKey | keyof Omit<MonthlyComparisonData, 'month'>): string => {
   switch (metric) {
     case 'totalRevenue': return 'Total Revenue';
     case 'labourRevenue': return 'Labour Revenue';
     case 'partsRevenue': return 'Parts Revenue';
     case 'accessoriesRevenue': return 'Accessories Revenue';
     case 'throughput': return 'Throughput';
-    default: return metric;
+    case 'mechRo': return 'Mechanical ROs';
+    case 'bpRo': return 'Body & Paint ROs';
+    // Add other cases from MonthlyComparisonData if they differ or need specific labels
+    default: 
+      // Capitalize first letter for default cases
+      const str = String(metric);
+      return str.charAt(0).toUpperCase() + str.slice(1).replace(/([A-Z])/g, ' $1').trim();
   }
 };
 
@@ -65,11 +76,21 @@ const formatCurrency = (value: number) => {
   }
 };
 
-const PeriodComparisonCharts: React.FC<PeriodComparisonChartsProps> = ({ ytdSummaryData, mtdDataForSelectedMonth, selectedMonthLabel, currentYear, previousYear }) => {
+const PeriodComparisonCharts: React.FC<PeriodComparisonChartsProps> = ({
+  ytdSummaryData,
+  mtdDataForSelectedMonth,
+  allMonthsComparisonData,
+  selectedMonthLabel,
+  currentYear,
+  previousYear,
+  isExpanded,
+  onToggleExpand
+}) => {
   // State for selected metrics
   const [ytdMetric, setYtdMetric] = useState<PeriodMetricKey>('totalRevenue');
   const [mtdMetric, setMtdMetric] = useState<PeriodMetricKey>('totalRevenue');
-  const [isYtdExpanded, setIsYtdExpanded] = useState(false);
+  // isYtdExpanded is now controlled by the isExpanded prop
+  const [expandedMtdMetric, setExpandedMtdMetric] = useState<keyof Omit<MonthlyComparisonData, 'month'>>('partsRevenue'); // Default for new expanded chart
 
   // Animation variants
   const containerVariants = {
@@ -155,26 +176,19 @@ const PeriodComparisonCharts: React.FC<PeriodComparisonChartsProps> = ({ ytdSumm
       variants={containerVariants}
       initial="hidden"
       animate="visible"
-      className={`w-full grid grid-cols-1 ${isYtdExpanded ? 'lg:grid-cols-1' : 'lg:grid-cols-2'} gap-6 mb-6`}
+      className={`w-full grid grid-cols-1 ${isExpanded ? 'lg:grid-cols-1' : 'lg:grid-cols-[1fr_auto_1fr]'} gap-6 mb-6`}
     >
       {/* YTD vs LYTD Chart */}
       <motion.div 
         variants={itemVariants} 
-        className={`card bg-gradient-to-br from-white to-gray-50 border border-gray-100 p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 ${isYtdExpanded ? 'lg:col-span-2' : ''}`}
+        className={`card bg-gradient-to-br from-white to-gray-50 border border-gray-100 p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300`}
       >
         <div className="flex justify-between items-start mb-4">
           <div className="flex-grow">
             <h2 className="text-lg font-bold bg-gradient-to-r from-primary-600 to-secondary-500 bg-clip-text text-transparent">
-              YTD vs LYTD Comparison {isYtdExpanded ? `(${getMetricLabel(ytdMetric)} - Monthly Breakdown)` : ''}
+              YTD vs LYTD Comparison {isExpanded ? `(${getMetricLabel(ytdMetric)} - Monthly Breakdown)` : ''}
             </h2>
           </div>
-          <button 
-            onClick={() => setIsYtdExpanded(!isYtdExpanded)}
-            className="p-1.5 text-gray-500 hover:text-primary-600 hover:bg-primary-50 rounded-md transition-colors"
-            title={isYtdExpanded ? "Collapse" : "Expand"}
-          >
-            {isYtdExpanded ? <Minimize2 size={18} /> : <Maximize2 size={18} />}
-          </button>
           <div className="flex gap-2 bg-gray-100 p-1 rounded-lg">
             <button
               onClick={() => setYtdMetric('totalRevenue')}
@@ -209,10 +223,10 @@ const PeriodComparisonCharts: React.FC<PeriodComparisonChartsProps> = ({ ytdSumm
           </div>
         </div>
         
-        <div className={`${isYtdExpanded ? 'h-[60vh]' : 'h-80'} relative overflow-hidden group transition-all duration-300 ease-in-out`}>
+        <div className={`${isExpanded ? 'h-[60vh]' : 'h-80'} relative overflow-hidden group transition-all duration-300 ease-in-out`}>
           <div className="absolute inset-0 bg-gradient-to-r from-chart-blue/5 to-chart-purple/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
           <ResponsiveContainer width="100%" height="100%">
-            {!isYtdExpanded ? (
+            {!isExpanded ? (
               <BarChart
                 data={ytdData}
                 margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
@@ -322,11 +336,23 @@ const PeriodComparisonCharts: React.FC<PeriodComparisonChartsProps> = ({ ytdSumm
         </div>
       </motion.div>
 
-      {/* MTD vs LMTD Chart */}
-      <motion.div 
-        variants={itemVariants} 
-        className="card bg-gradient-to-br from-white to-gray-50 border border-gray-100 p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300"
-      >
+      {/* Centered Toggle Button */}
+      <div className="flex justify-center items-center my-1">
+        <button 
+          onClick={onToggleExpand}
+          className="p-2 text-gray-500 hover:text-primary-600 hover:bg-primary-100 dark:hover:bg-gray-700 rounded-full focus:outline-none focus:ring-2 focus:ring-primary-500 transition-colors duration-150 ease-in-out"
+          title={isExpanded ? "Collapse Charts" : "Expand Charts"}
+        >
+          {isExpanded ? <ChevronUp className="h-6 w-6" /> : <ChevronsDownUp className="h-6 w-6" />}
+        </button>
+      </div>
+
+      {/* MTD vs LMTD Chart (Conditional Rendering based on isExpanded) */}
+      {!isExpanded && (
+        <motion.div 
+          variants={itemVariants} 
+          className="card bg-gradient-to-br from-white to-gray-50 border border-gray-100 p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300"
+        >
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-lg font-bold bg-gradient-to-r from-primary-600 to-secondary-500 bg-clip-text text-transparent">
             MTD vs LYMTD Comparison ({selectedMonthLabel})        </h2>
@@ -420,7 +446,58 @@ const PeriodComparisonCharts: React.FC<PeriodComparisonChartsProps> = ({ ytdSumm
             </BarChart>
           </ResponsiveContainer>
         </div>
-      </motion.div>
+        </motion.div>
+      )}
+
+      {isExpanded && (
+        <motion.div 
+          variants={itemVariants} 
+          className="card bg-gradient-to-br from-white to-gray-50 border border-gray-100 p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300">
+          {/* Placeholder for new Expanded MTD All Months Chart */}
+          <div className="flex flex-col sm:flex-row justify-between items-start mb-4">
+            <h2 className="text-lg font-bold bg-gradient-to-r from-primary-600 to-secondary-500 bg-clip-text text-transparent mb-2 sm:mb-0">
+              Monthly Comparison ({currentYear} vs {previousYear}) - {getMetricLabel(expandedMtdMetric)}
+            </h2>
+            <div className="flex flex-wrap gap-1 bg-gray-100 p-1 rounded-lg self-start sm:self-center">
+              {(Object.keys(allMonthsComparisonData[0] || {}).filter(key => key !== 'month') as Array<keyof Omit<MonthlyComparisonData, 'month'>>).map(metric => (
+                <button
+                  key={metric}
+                  onClick={() => setExpandedMtdMetric(metric)}
+                  className={`btn text-xs py-1 px-2 ${expandedMtdMetric === metric ? 'bg-white text-primary-600 shadow-sm' : 'bg-transparent text-gray-600'}`}
+                >
+                  {getMetricLabel(metric)}
+                </button>
+              ))}
+            </div>
+          </div>
+          <div className="h-[400px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={(() => {
+                const monthOrder: { [key: string]: number } = { Jan: 1, Feb: 2, Mar: 3, Apr: 4, May: 5, Jun: 6, Jul: 7, Aug: 8, Sep: 9, Oct: 10, Nov: 11, Dec: 12 };
+                // Ensure allMonthsComparisonData is not empty and has the metric
+                if (!allMonthsComparisonData || allMonthsComparisonData.length === 0 || !allMonthsComparisonData[0][expandedMtdMetric]) {
+                  return [];
+                }
+                return allMonthsComparisonData
+                  .map(monthlyData => ({
+                    month: monthlyData.month,
+                    [`${previousYear}`]: monthlyData[expandedMtdMetric]?.[previousYear.toString() as '2024' | '2025'] || 0,
+                    [`${currentYear}`]: monthlyData[expandedMtdMetric]?.[currentYear.toString() as '2024' | '2025'] || 0,
+                  }))
+                  .sort((a, b) => monthOrder[a.month] - monthOrder[b.month]);
+              })()} margin={{ top: 5, right: 20, left: 10, bottom: 5 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" opacity={0.6} vertical={false}/>
+                <XAxis dataKey="month" tick={{ fontSize: 12, fill: '#4b5563' }} axisLine={{ stroke: '#d1d5db' }} tickLine={false} />
+                <YAxis tickFormatter={formatCurrency} tick={{ fontSize: 12, fill: '#4b5563' }} axisLine={{ stroke: '#d1d5db' }} tickLine={false} width={70}/>
+                <Tooltip content={<CustomTooltip />} />
+                <Legend wrapperStyle={{ paddingTop: '10px' }} iconType="circle" iconSize={8} />
+                <Bar dataKey={`${previousYear}`} fill="#60a5fa" name={`${previousYear}`} radius={[4, 4, 0, 0]} barSize={20}/>
+                <Bar dataKey={`${currentYear}`} fill="#f472b6" name={`${currentYear}`} radius={[4, 4, 0, 0]} barSize={20}/>
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </motion.div>
+      )}
     </motion.div>
   );
 };

@@ -115,6 +115,7 @@ const RevenueDashboard: React.FC = () => {
   const [advisorPerformanceTableData, setAdvisorPerformanceTableData] = useState<ProcessedAdvisorPerformance[]>([]);
   const [monthlyTrendsChartData, setMonthlyTrendsChartData] = useState<MonthlyTrendItem[]>([]);
   const [selectedTrendMetricKey, setSelectedTrendMetricKey] = useState<keyof MonthlyTrendItem>('totalRevenue');
+  const [isComparisonExpanded, setIsComparisonExpanded] = useState<boolean>(false);
 
   
   // State for KPI card values derived from kpiSourceData
@@ -854,9 +855,12 @@ const RevenueDashboard: React.FC = () => {
           <PeriodComparisonCharts 
             ytdSummaryData={tillDateComparisonData.ytd}
             mtdDataForSelectedMonth={tillDateComparisonData.mtd[monthMap[selectedMonth]] || null}
+            allMonthsComparisonData={yearOnYearComparisonData} 
             selectedMonthLabel={monthMap[selectedMonth]}
             currentYear={2025}
             previousYear={2024}
+            isExpanded={isComparisonExpanded}
+            onToggleExpand={() => setIsComparisonExpanded(!isComparisonExpanded)}
           />
         )}
         
