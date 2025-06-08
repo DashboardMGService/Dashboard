@@ -26,154 +26,238 @@ import {
 import { 
   BarChart2, 
   Car, 
-  PenTool as Tool, 
   DollarSign, 
   Coins, 
-  Users
+  Users,
+  Briefcase // Added Briefcase icon
 } from 'lucide-react';
 
 import StatCard from '../components/StatCard';
 import DataTable from '../components/DataTable';
-import PeriodComparisonCharts from '../components/PeriodComparisonCharts';
-import { 
-  monthlyKpiData, 
-  previousYearData
-} from '../data';
-
+import PeriodComparisonCharts, { PeriodComparisonChartsProps } from '../components/PeriodComparisonCharts';
 import {
-  getMonthlyServiceAdvisors,
-  getCombinedMonthlyData,
-  calculateTotalRevenue,
-  getTopServiceAdvisors,
-  getYearOnYearComparison
+  monthlyKpiData, // Corrected: From ../data/index.ts
+  previousYearData, // Corrected: From ../data/index.ts
+} from '../data';
+import {
+  getMonthlyServiceAdvisors, 
+  getCombinedMonthlyData,   
+  calculateTotalRevenue    
 } from '../data/serviceAdvisorRevenue';
+import { yearOnYearComparisonData, MonthlyComparisonData as YearOnYearMonthlyData } from '../data/yearOnYearComparisonData';
+import { yearOnYearComparisonData as kpiSourceData } from '../data/kpiCardData.ts';
+import { tillDateComparisonData } from '../data/tillDateComparisonData';
+
+// Local interface for data used in currentYearTotals and previousYearTotals
+interface MonthlyTotalsData {
+  month?: string; // Changed to optional to align with KpiData's inferred type
+  mechRo: number;
+  bpRo: number;
+  accessoriesRo: number;
+  partsRevenue?: number; // Optional as it might be missing or 0
+  labourRevenue?: number; // Optional as it might be missing or 0
+  // Add other fields from KpiData if needed by other parts of currentYearTotals/previousYearTotals
+} 
+
+// Helper functions
+const formatIndianCurrency = (value: number | undefined): string => {
+  if (value === undefined || isNaN(value)) return '₹0';
+  return `₹${value.toLocaleString('en-IN', { maximumFractionDigits: 0 })}`;
+};
+
+interface KpiValue {
+  current: number;
+  previous: number;
+  percentChange?: number;
+}
 
 const RevenueDashboard: React.FC = () => {
+  const monthMap: { [key: string]: string } = {
+    jan: 'JAN',
+    feb: 'FEB',
+    mar: 'MAR',
+    apr: 'APR',
+    may: 'MAY',
+    jun: 'JUN',
+    jul: 'JUL',
+    aug: 'AUG',
+    sep: 'SEP',
+    oct: 'OCT',
+    nov: 'NOV',
+    dec: 'DEC',
+  };
   const [comparisonMetric, setComparisonMetric] = useState<string>('mechRo');
   const [selectedMonth, setSelectedMonth] = useState<'jan' | 'feb' | 'mar' | 'apr' | 'may' | 'jun' | 'jul' | 'aug' | 'sep' | 'oct' | 'nov' | 'dec'>('jan');
-  const [selectedYear, setSelectedYear] = useState<number>(2024);
+  const [selectedYear, setSelectedYear] = useState<number>(2025); 
   
-  // Get service advisor data for the selected month and year
-  const mechData = getMonthlyServiceAdvisors(selectedYear, selectedMonth, 'mech');
-  const bodyData = getMonthlyServiceAdvisors(selectedYear, selectedMonth, 'body');
-  const combinedData = getCombinedMonthlyData(selectedYear, selectedMonth);
-  
-  // Calculate totals for the selected year
-  const totals = combinedData.reduce(
-    (acc, advisor) => {
-      acc.throughput += advisor.throughput;
-      acc.vas += advisor.vas;
-      acc.lab += advisor.lab;
-      acc.acces += advisor.acces;
-      acc.lub += advisor.lub;
-      acc.bat += advisor.bat;
-      acc.tyre += advisor.tyre;
-      acc.parts += advisor.parts;
-      acc.totalRevenue += calculateTotalRevenue(advisor);
-      return acc;
-    },
-    { 
-      throughput: 0, vas: 0, lab: 0, acces: 0, lub: 0, bat: 0, 
-      tyre: 0, parts: 0, totalRevenue: 0 
+  // State for KPI card values derived from kpiSourceData
+  const [kpiCardValues, setKpiCardValues] = useState<{
+    throughput: KpiValue;
+    labourRevenue: KpiValue;
+    partsRevenue: KpiValue;
+    totalRevenue: KpiValue;
+  }>({
+    throughput: { current: 0, previous: 0, percentChange: 0 },
+    labourRevenue: { current: 0, previous: 0, percentChange: 0 },
+    partsRevenue: { current: 0, previous: 0, percentChange: 0 },
+    totalRevenue: { current: 0, previous: 0, percentChange: 0 },
+  });
+
+  // State for other charts that previously used 'totals', 'mechData', 'bodyData'
+  const [chartDataSource, setChartDataSource] = useState({
+    throughput: 0,
+    labour: 0,
+    parts: 0,
+    accessories: 0,
+    vas: 0, // Placeholder, as kpiSourceData doesn't have explicit VAS
+    totalRevenue: 0,
+    serviceAdvisorCount: 0 // Placeholder for mechData.length + bodyData.length
+  });
+
+  // Effect to update KPI card values when selectedMonth or selectedYear changes
+  React.useEffect(() => {
+    const monthMap: { [key: string]: string } = {
+      jan: "Jan", feb: "Feb", mar: "Mar", apr: "Apr", may: "May", jun: "Jun",
+      jul: "Jul", aug: "Aug", sep: "Sep", oct: "Oct", nov: "Nov", dec: "Dec"
+    };
+    const currentMonthStr = monthMap[selectedMonth];
+    
+    const dataForMonth = kpiSourceData.find(d => d.month === currentMonthStr);
+
+    if (dataForMonth) {
+      const yearKey = selectedYear.toString() as '2024' | '2025';
+      // prevYearKey was unused, removed.
+
+      const currentThroughput = dataForMonth.throughput[yearKey] || 0;
+      const currentLabourRevenue = dataForMonth.labourRevenue[yearKey] || 0;
+      const currentPartsRevenue = dataForMonth.partsRevenue[yearKey] || 0;
+      const currentAccessoriesRevenue = dataForMonth.accessoriesRo[yearKey] || 0;
+      const currentTotalRevenue = currentPartsRevenue + currentLabourRevenue + currentAccessoriesRevenue;
+
+      let prevThroughput = 0;
+      let prevLabourRevenue = 0;
+      let prevPartsRevenue = 0;
+      let prevAccessoriesRevenue = 0;
+      let prevTotalRevenue = 0;
+
+      if (selectedYear === 2025 && dataForMonth.throughput['2024'] !== undefined) { 
+        prevThroughput = dataForMonth.throughput['2024'] || 0;
+        prevLabourRevenue = dataForMonth.labourRevenue['2024'] || 0;
+        prevPartsRevenue = dataForMonth.partsRevenue['2024'] || 0;
+        prevAccessoriesRevenue = dataForMonth.accessoriesRo['2024'] || 0;
+        prevTotalRevenue = prevPartsRevenue + prevLabourRevenue + prevAccessoriesRevenue;
+      }
+      
+      setKpiCardValues({
+        throughput: {
+          current: currentThroughput,
+          previous: prevThroughput,
+          percentChange: dataForMonth.throughput?.percentChange
+        },
+        labourRevenue: {
+          current: currentLabourRevenue,
+          previous: prevLabourRevenue,
+          percentChange: dataForMonth?.labourRevenue?.percentChange
+        },
+        partsRevenue: {
+          current: currentPartsRevenue,
+          previous: prevPartsRevenue,
+          percentChange: dataForMonth?.partsRevenue?.percentChange
+        },
+        // Total Revenue percent change needs to be calculated based on the totals, 
+        // as it's not a direct field in kpiSourceData like the others.
+        // Or, we can add totalRevenue with percentChange to kpiCardData.ts if preferred.
+        // For now, let's calculate it here if currentPeriodData exists.
+        totalRevenue: {
+          current: currentTotalRevenue,
+          previous: prevTotalRevenue,
+          percentChange: (prevTotalRevenue === 0) ? (currentTotalRevenue > 0 ? undefined : 0) : parseFloat((((currentTotalRevenue - prevTotalRevenue) / prevTotalRevenue) * 100).toFixed(2))
+        }
+      });
+
+      // Update data source for other charts
+      setChartDataSource({
+        throughput: currentThroughput,
+        labour: currentLabourRevenue,
+        parts: currentPartsRevenue,
+        accessories: currentAccessoriesRevenue,
+        vas: 0, // Placeholder for VAS
+        totalRevenue: currentTotalRevenue,
+        serviceAdvisorCount: currentThroughput // Using total ROs as a proxy for service advisor activity count
+      });
+
+    } else {
+      // Reset if data for month not found
+      setKpiCardValues({ throughput: 0, throughputPrev: 0, labourRevenue: 0, labourRevenuePrev: 0, partsRevenue: 0, partsRevenuePrev: 0, totalRevenue: 0, totalRevenuePrev: 0 });
+      setChartDataSource({ throughput: 0, labour: 0, parts: 0, accessories: 0, vas: 0, totalRevenue: 0, serviceAdvisorCount: 0 });
     }
-  );
-  
-  // Get year-on-year comparison between the previous year and selected year
-  const yearOnYearData = selectedYear > 2024 ? 
-    getYearOnYearComparison(selectedYear - 1, selectedYear, selectedMonth) : 
-    null;
-  
+  }, [selectedMonth, selectedYear]);
+
   // For backward compatibility with the existing dashboard
   const currentYearData = monthlyKpiData;
   const previousYearEquivalent = previousYearData;
   
   const currentYearTotals = {
-    mechRo: currentYearData.reduce((sum, month) => sum + month.mechRo, 0),
-    bpRo: currentYearData.reduce((sum, month) => sum + month.bpRo, 0),
-    accessoriesRo: currentYearData.reduce((sum, month) => sum + month.accessoriesRo, 0),
-    partsRevenue: currentYearData.reduce((sum, month) => sum + (month.partsRevenue || 0), 0),
-    labourRevenue: currentYearData.reduce((sum, month) => sum + (month.labourRevenue || 0), 0),
+    mechRo: currentYearData.reduce((sum: number, month: MonthlyTotalsData) => sum + month.mechRo, 0),
+    bpRo: currentYearData.reduce((sum: number, month: MonthlyTotalsData) => sum + month.bpRo, 0),
+    accessoriesRo: currentYearData.reduce((sum: number, month: MonthlyTotalsData) => sum + month.accessoriesRo, 0),
+    partsRevenue: currentYearData.reduce((sum: number, month: MonthlyTotalsData) => sum + (month.partsRevenue || 0), 0),
+    labourRevenue: currentYearData.reduce((sum: number, month: MonthlyTotalsData) => sum + (month.labourRevenue || 0), 0),
   };
   
   const previousYearTotals = {
-    mechRo: previousYearEquivalent.reduce((sum, month) => sum + month.mechRo, 0),
-    bpRo: previousYearEquivalent.reduce((sum, month) => sum + month.bpRo, 0),
-    accessoriesRo: previousYearEquivalent.reduce((sum, month) => sum + month.accessoriesRo, 0),
-    partsRevenue: previousYearEquivalent.reduce((sum, month) => sum + (month.partsRevenue || 0), 0),
-    labourRevenue: previousYearEquivalent.reduce((sum, month) => sum + (month.labourRevenue || 0), 0),
+    mechRo: previousYearEquivalent.reduce((sum: number, month: MonthlyTotalsData) => sum + month.mechRo, 0),
+    bpRo: previousYearEquivalent.reduce((sum: number, month: MonthlyTotalsData) => sum + month.bpRo, 0),
+    accessoriesRo: previousYearEquivalent.reduce((sum: number, month: MonthlyTotalsData) => sum + month.accessoriesRo, 0),
+    partsRevenue: previousYearEquivalent.reduce((sum: number, month: MonthlyTotalsData) => sum + (month.partsRevenue || 0), 0),
+    labourRevenue: previousYearEquivalent.reduce((sum: number, month: MonthlyTotalsData) => sum + (month.labourRevenue || 0), 0),
   };
   
   // Calculate percentage changes for the original data (not used with new data structure)
   // This is kept for backward compatibility with other parts of the dashboard
   // that haven't been updated yet to use the new data structure
   
-  // Prepare data for year-on-year comparison chart using the new data structure
-  const months = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
-  const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-  
-  const comparisonData = months.map((month, index) => {
-    // Get data for both years using our new helper functions, separated by service type
-    const mech2024 = getMonthlyServiceAdvisors(2024, month as any, 'mech');
-    const body2024 = getMonthlyServiceAdvisors(2024, month as any, 'body');
-    const mech2025 = getMonthlyServiceAdvisors(2025, month as any, 'mech');
-    const body2025 = getMonthlyServiceAdvisors(2025, month as any, 'body');
-    
-    // Choose which data to use based on the selected comparison metric
-    let data2024 = [];
-    let data2025 = [];
-    
-    if (comparisonMetric === 'mechRo') {
-      data2024 = mech2024;
-      data2025 = mech2025;
-    } else if (comparisonMetric === 'bpRo') {
-      data2024 = body2024;
-      data2025 = body2025;
-    } else {
-      // For other metrics, use combined data
-      data2024 = [...mech2024, ...body2024];
-      data2025 = [...mech2025, ...body2025];
+  // Prepare data for year-on-year comparison chart using the new yearOnYearComparisonData.ts
+  const displayComparisonData = yearOnYearComparisonData.map((monthlyData: YearOnYearMonthlyData) => {
+    let data2024 = 0;
+    let data2025 = 0;
+    let target = 0;
+
+    switch (comparisonMetric) {
+      case 'mechRo':
+        data2024 = monthlyData.mechRo['2024'];
+        data2025 = monthlyData.mechRo['2025'];
+        target = monthlyData.mechRo.target;
+        break;
+      case 'bpRo':
+        data2024 = monthlyData.bpRo['2024'];
+        data2025 = monthlyData.bpRo['2025'];
+        target = monthlyData.bpRo.target;
+        break;
+      case 'accessoriesRo':
+        data2024 = monthlyData.accessoriesRo['2024'];
+        data2025 = monthlyData.accessoriesRo['2025'];
+        target = monthlyData.accessoriesRo.target;
+        break;
+      case 'partsRevenue':
+        data2024 = monthlyData.partsRevenue['2024'];
+        data2025 = monthlyData.partsRevenue['2025'];
+        target = monthlyData.partsRevenue.target;
+        break;
+      case 'labourRevenue':
+        data2024 = monthlyData.labourRevenue['2024'];
+        data2025 = monthlyData.labourRevenue['2025'];
+        target = monthlyData.labourRevenue.target;
+        break;
+      default:
+        break;
     }
-    
-    // Calculate totals for each metric
-    const totals = data2024.reduce(
-      (acc, advisor) => {
-        if (comparisonMetric === 'mechRo' || comparisonMetric === 'bpRo') {
-          acc += advisor.throughput || 0;
-        } else if (comparisonMetric === 'accessoriesRo') {
-          acc += advisor.acces || 0;
-        } else if (comparisonMetric === 'partsRevenue') {
-          acc += advisor.parts || 0;
-        } else if (comparisonMetric === 'labourRevenue') {
-          acc += advisor.lab || 0;
-        }
-        return acc;
-      }, 0
-    );
-    
-    const totals2025 = data2025.reduce(
-      (acc, advisor) => {
-        if (comparisonMetric === 'mechRo' || comparisonMetric === 'bpRo') {
-          acc += advisor.throughput || 0;
-        } else if (comparisonMetric === 'accessoriesRo') {
-          acc += advisor.acces || 0;
-        } else if (comparisonMetric === 'partsRevenue') {
-          acc += advisor.parts || 0;
-        } else if (comparisonMetric === 'labourRevenue') {
-          acc += advisor.lab || 0;
-        }
-        return acc;
-      }, 0
-    );
-    
+
     return {
-      month: monthNames[index],
-      '2024': totals,
-      '2025': totals2025,
-      target: comparisonMetric === 'mechRo' ? 1200 :
-             comparisonMetric === 'bpRo' ? 200 :
-             comparisonMetric === 'accessoriesRo' ? 50 :
-             comparisonMetric === 'partsRevenue' ? 170 :
-             comparisonMetric === 'labourRevenue' ? 65 : 0
+      month: monthlyData.month,
+      '2024': data2024,
+      '2025': data2025,
+      target: target,
     };
   });
   
@@ -182,17 +266,16 @@ const RevenueDashboard: React.FC = () => {
   
   // Prepare data for the radial bar chart - using the new data structure
   const radialData = [
-    { name: 'Throughput', value: totals.throughput, fill: '#4361ee' },
-    { name: 'Service Advisors', value: mechData.length + bodyData.length, fill: '#7209b7' },
-    { name: 'Revenue (Lakhs)', value: Math.round(totals.totalRevenue / 100000), fill: '#f72585' },
+    { name: 'Throughput', value: chartDataSource.throughput, fill: '#4361ee' },
+    { name: 'RO Count', value: chartDataSource.serviceAdvisorCount, fill: '#7209b7' }, // Changed label from 'Service Advisors'
+    { name: 'Revenue (Lakhs)', value: Math.round(chartDataSource.totalRevenue / 100000), fill: '#f72585' },
   ];
   
   // Prepare data for the revenue breakdown pie chart using the new data structure
   const revenueBreakdown = [
-    { name: 'Labor', value: totals.lab, color: '#4361ee' },
-    { name: 'Parts', value: totals.parts, color: '#7209b7' },
-    { name: 'VAS', value: totals.vas, color: '#f72585' },
-    { name: 'Accessories', value: totals.acces, color: '#fb8500' },
+    { name: 'Labor', value: chartDataSource.labour, color: '#4361ee' },
+    { name: 'Parts', value: chartDataSource.parts, color: '#7209b7' },
+    { name: 'Accessories', value: chartDataSource.accessories, color: '#fb8500' },
   ];
   
   // Prepare data for service advisor revenue chart using the new data structure
@@ -246,14 +329,35 @@ const RevenueDashboard: React.FC = () => {
   // Custom tooltip for the comparison chart
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
+      // Filter for unique payload entries by name to avoid duplicates (e.g. from Area + Line)
+      const uniquePayloadEntries = payload.reduce((acc: any[], current: any) => {
+        if (!acc.find(item => item.name === current.name)) {
+          acc.push(current);
+        }
+        return acc;
+      }, []);
+
+      // Define the desired display order and labels
+      const displayOrder = [
+        { key: '2025', label: '2025' },
+        { key: '2024', label: '2024' },
+        { key: 'Target', label: 'Target' }, // 'Target' is the name prop for the target Line series
+      ];
+
       return (
-        <div className="custom-tooltip">
-          <p className="font-medium">{label}</p>
-          {payload.map((entry: any, index: number) => (
-            <p key={index} style={{ color: entry.color }} className="text-sm">
-              {entry.name}: {entry.value}
-            </p>
-          ))}
+        <div className="custom-tooltip bg-white p-3 rounded-md shadow-lg border border-gray-200">
+          <p className="font-semibold text-gray-800 mb-1">{label}</p>
+          {displayOrder.map(item => {
+            const entry = uniquePayloadEntries.find((p: any) => p.name === item.key);
+            if (entry) {
+              return (
+                <p key={item.key} style={{ color: entry.color }} className="text-sm text-gray-700">
+                  {item.label}: {typeof entry.value === 'number' ? entry.value.toLocaleString() : entry.value}
+                </p>
+              );
+            }
+            return null;
+          })}
         </div>
       );
     }
@@ -268,7 +372,7 @@ const RevenueDashboard: React.FC = () => {
       animate="animate"
     >
       {/* Professional Header with Logo */}
-      <div className="max-w-7xl mx-auto bg-gradient-to-r from-primary-600 to-secondary-600 rounded-t-xl shadow-xl border border-white/40 p-4 overflow-hidden">
+      <div className="bg-gradient-to-r from-primary-600 to-secondary-600 rounded-t-xl shadow-xl border border-white/40 p-4 overflow-hidden">
         <div className="flex justify-between items-center">
           <div className="flex items-center space-x-3">
             <div className="bg-white p-2 rounded-full shadow-md">
@@ -326,7 +430,7 @@ const RevenueDashboard: React.FC = () => {
         </div>
       </motion.div>
       
-      <div className="max-w-7xl mx-auto bg-white/60 backdrop-blur-sm rounded-b-xl shadow-xl border-x border-b border-white/40 p-6 overflow-hidden">
+      <div className="bg-white/60 backdrop-blur-sm rounded-b-xl shadow-xl border-x border-b border-white/40 p-6 overflow-hidden">
       {/* Dashboard Header */}
       <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
         <div>
@@ -338,41 +442,45 @@ const RevenueDashboard: React.FC = () => {
       <motion.div variants={itemVariants} className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
         <motion.div variants={itemVariants}>
           <StatCard 
-            title="Throughput"
-            value={totals.throughput.toFixed(0)}
-            percentChange={yearOnYearData ? yearOnYearData.percentageChanges.throughput : 0}
+            title="Throughput (ROs)"
+            value={kpiCardValues.throughput.current.toLocaleString() || '0'}
+            percentChange={kpiCardValues.throughput.percentChange}
             icon={<Car className="text-primary-500" size={24} />}
             color="primary"
+            subValue={`Prev: ${kpiCardValues.throughput.previous.toLocaleString()}`}
           />
         </motion.div>
         
         <motion.div variants={itemVariants}>
           <StatCard 
-            title="Labour + VAS Revenue"
-            value={`₹${((totals.lab + totals.vas) / 100000).toFixed(1)} L`}
-            percentChange={yearOnYearData ? (yearOnYearData.percentageChanges.lab + yearOnYearData.percentageChanges.vas) / 2 : 0}
-            icon={<Tool className="text-secondary-500" size={24} />}
-            color="secondary"
+            title="Labour Revenue"
+            value={formatIndianCurrency(kpiCardValues.labourRevenue.current)}
+            percentChange={kpiCardValues.labourRevenue.percentChange}
+            icon={<Briefcase className="text-success-500" size={24} />}
+            color="success"
+            subValue={`Prev: ${formatIndianCurrency(kpiCardValues.labourRevenue.previous)}`}
           />
         </motion.div>
         
         <motion.div variants={itemVariants}>
           <StatCard 
             title="Parts Revenue"
-            value={`₹${(totals.parts / 100000).toFixed(1)} L`}
-            percentChange={yearOnYearData ? yearOnYearData.percentageChanges.parts : 0}
+            value={formatIndianCurrency(kpiCardValues.partsRevenue.current)}
+            percentChange={kpiCardValues.partsRevenue.percentChange}
             icon={<BarChart2 className="text-accent-500" size={24} />}
             color="accent"
+            subValue={`Prev: ${formatIndianCurrency(kpiCardValues.partsRevenue.previous)}`}
           />
         </motion.div>
         
         <motion.div variants={itemVariants}>
           <StatCard 
             title="Total Revenue"
-            value={`₹${(totals.totalRevenue / 100000).toFixed(1)} L`}
-            percentChange={yearOnYearData ? yearOnYearData.percentageChanges.totalRevenue : 0}
+            value={formatIndianCurrency(kpiCardValues.totalRevenue.current)}
+            percentChange={kpiCardValues.totalRevenue.percentChange}
             icon={<DollarSign className="text-success-500" size={24} />}
             color="success"
+            subValue={`Prev: ${formatIndianCurrency(kpiCardValues.totalRevenue.previous)}`}
           />
         </motion.div>
       </motion.div>
@@ -419,7 +527,7 @@ const RevenueDashboard: React.FC = () => {
           <div className="absolute inset-0 bg-gradient-to-r from-chart-blue/5 to-chart-purple/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
           <ResponsiveContainer width="100%" height="100%">
             <ComposedChart
-              data={comparisonData}
+              data={displayComparisonData}
               margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
             >
               <defs>
@@ -458,7 +566,7 @@ const RevenueDashboard: React.FC = () => {
               />
               
               {/* Reference area to highlight target achievement */}
-              {comparisonData.map((entry, index) => (
+              {displayComparisonData.map((entry, index) => (
                 entry['2025'] > entry.target && (
                   <ReferenceArea 
                     key={`area-${index}`}
@@ -556,7 +664,15 @@ const RevenueDashboard: React.FC = () => {
         </motion.div>
 
         {/* YTD vs LYTD and MTD vs LMTD Comparison Charts - Fixed to 2025 vs 2024 */}
-        <PeriodComparisonCharts />
+        {selectedYear === 2025 && (
+          <PeriodComparisonCharts 
+            ytdSummaryData={tillDateComparisonData.ytd}
+            mtdDataForSelectedMonth={tillDateComparisonData.mtd[monthMap[selectedMonth]] || null}
+            selectedMonthLabel={monthMap[selectedMonth]}
+            currentYear={2025}
+            previousYear={2024}
+          />
+        )}
         
         <motion.div variants={itemVariants} className="card overflow-hidden bg-gradient-to-br from-white to-gray-50 border border-gray-100">
           <div className="flex justify-between items-center mb-4">

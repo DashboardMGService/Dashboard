@@ -9,7 +9,7 @@ import KpiDashboard from './pages/KpiDashboard';
 import type { DashboardView } from './types';
 
 function App() {
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeView, setActiveView] = useState<DashboardView>('revenue');
 
   // Toggle sidebar
