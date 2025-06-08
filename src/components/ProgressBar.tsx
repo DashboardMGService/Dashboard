@@ -6,7 +6,8 @@ interface ProgressBarProps {
   max: number;
   label?: string;
   color?: 'primary' | 'secondary' | 'success' | 'warning' | 'danger' | 'accent';
-  showPercentage?: boolean;
+  showPercentage?: boolean; // If true and unit is not provided, shows value as percentage
+  unit?: string; // e.g., "%", "days", "pts". If provided, this unit is shown next to the value.
   size?: 'sm' | 'md' | 'lg';
   className?: string;
 }
@@ -17,6 +18,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
   label,
   color = 'primary',
   showPercentage = true,
+  unit,
   size = 'md',
   className = '',
 }) => {
@@ -46,9 +48,9 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
       {label && (
         <div className="flex justify-between items-center mb-2">
           <span className="text-sm font-medium text-gray-700">{label}</span>
-          {showPercentage && (
+          {(unit || showPercentage) && (
             <span className={`text-sm font-medium ${labelColor}`}>
-              {percentage.toFixed(0)}%
+              {unit ? `${value.toFixed(0)}${unit}` : (showPercentage ? `${percentage.toFixed(0)}%` : '')}
             </span>
           )}
         </div>
