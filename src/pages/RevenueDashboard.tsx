@@ -50,10 +50,6 @@ import {
   monthlyKpiData, // Corrected: From ../data/index.ts
   // previousYearData, // Corrected: From ../data/index.ts
 } from '../data';
-import {
-  getCombinedMonthlyData,   
-  calculateTotalRevenue    
-} from '../data/serviceAdvisorRevenue';
 import { yearOnYearComparisonData, MonthlyComparisonData as YearOnYearMonthlyData } from '../data/yearOnYearComparisonData';
 import { yearOnYearComparisonData as kpiSourceData } from '../data/kpiCardData.ts';
 import { tillDateComparisonData } from '../data/tillDateComparisonData';
@@ -96,18 +92,18 @@ interface KpiValue {
 
 const RevenueDashboard: React.FC = () => {
   const monthMap: { [key: string]: string } = {
-    jan: 'JAN',
-    feb: 'FEB',
-    mar: 'MAR',
-    apr: 'APR',
-    may: 'MAY',
-    jun: 'JUN',
-    jul: 'JUL',
-    aug: 'AUG',
-    sep: 'SEP',
-    oct: 'OCT',
-    nov: 'NOV',
-    dec: 'DEC',
+    jan: 'Jan',
+    feb: 'Feb',
+    mar: 'Mar',
+    apr: 'Apr',
+    may: 'May',
+    jun: 'Jun',
+    jul: 'Jul',
+    aug: 'Aug',
+    sep: 'Sep',
+    oct: 'Oct',
+    nov: 'Nov',
+    dec: 'Dec',
   };
   const [comparisonMetric, setComparisonMetric] = useState<string>('mechRo');
   const [selectedMonth, setSelectedMonth] = useState<'jan' | 'feb' | 'mar' | 'apr' | 'may' | 'jun' | 'jul' | 'aug' | 'sep' | 'oct' | 'nov' | 'dec'>('jun'); 
@@ -829,7 +825,7 @@ const RevenueDashboard: React.FC = () => {
               <Scatter 
                 dataKey="2025" 
                 fill="#f72585" 
-                shape={(props) => {
+                shape={(props: any) => {
                   const { cx, cy, payload } = props;
                   // Only show for highest values
                   if (payload['2025'] > payload['2024'] * 1.2 && payload['2025'] > payload.target) {
@@ -845,7 +841,7 @@ const RevenueDashboard: React.FC = () => {
                       />
                     );
                   }
-                  return null;
+                  return <g />; // Return an empty SVG group instead of null
                 }}
               />
             </ComposedChart>
