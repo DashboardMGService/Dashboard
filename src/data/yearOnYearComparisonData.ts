@@ -43,14 +43,14 @@ const raw2025Data: Array<any> = [
   },
   {
     "month": "Jun",
-    "mechRo": { "total": 217 },
-    "bpRo": { "total": 16 },
-    "mechParts": 1645195.45,
-    "bpParts": 510382.3,
-    "mechLaborRevenue": 476480.03,
-    "bpLaborRevenue": 196761.5,
-    "mechAccessories": 152539.15,
-    "bpAccessories": 4534.66
+    "mechRo": { "total": 283 },
+    "bpRo": { "total": 20 },
+    "mechParts": 1963615.73,
+    "bpParts": 540211.4,
+    "mechLaborRevenue": 663566.53,
+    "bpLaborRevenue": 224661.5,
+    "mechAccessories": 176719.36999999997,
+    "bpAccessories": 4572.799999999999
   },
   {
     "month": "Mar",
