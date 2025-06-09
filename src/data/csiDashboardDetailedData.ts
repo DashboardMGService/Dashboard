@@ -413,9 +413,9 @@ export const csiDetailedData: YearlyKpiDataset[] = [
         "monthlyValues": {
           "january": 884.0,
           "february": 873.0,
-          "march": 738.0,
+          "march": 867.0,
           "april": 844.0,
-          "may": 872.0,
+          "may": 859.0,
           "june": 0.0,
           "july": 0.0,
           "august": 0.0,
