@@ -598,34 +598,34 @@ export const tillDateComparisonData: TillDateComparisonMainData = {
     },
     "Jun": {
       "throughput": {
-        "current": 233,
+        "current": 303,
         "previous": 1663,
         "target": 0,
-        "percentChange": -85.99
+        "percentChange": -81.78
       },
       "partsRevenue": {
-        "current": 2155577.75,
+        "current": 2503827.13,
         "previous": 13353966.569999997,
         "target": 0,
-        "percentChange": -83.86
+        "percentChange": -81.25
       },
       "labourRevenue": {
-        "current": 673241.53,
+        "current": 888228.03,
         "previous": 5402257.23,
         "target": 0,
-        "percentChange": -87.54
+        "percentChange": -83.56
       },
       "accessoriesRevenue": {
-        "current": 157073.81,
+        "current": 181292.16999999995,
         "previous": 405273.26000000007,
         "target": 0,
-        "percentChange": -61.24
+        "percentChange": -55.27
       },
       "totalRevenue": {
-        "current": 2985893.0900000003,
+        "current": 3573347.33,
         "previous": 19161497.06,
         "target": 0,
-        "percentChange": -84.42
+        "percentChange": -81.35
       }
     }
   }
