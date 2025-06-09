@@ -8562,12 +8562,12 @@ export const allServiceAdvisorYearlyPerformance: YearlyAdvisorPerformance[] = [
         "advisors": [
           {
             "advisorName": "AjayKumar",
-            "throughput": 23.0,
+            "throughput": 29.0,
             "revenueItems": {
-              "Throughput": 23.0,
+              "Throughput": 29.0,
               "VAS (INR)": 900.0,
-              "LAB": 13197.5,
-              "ACCES": 11522.3,
+              "LAB": 18002.5,
+              "ACCES": 11560.44,
               "LUB": 4597.4,
               "Brake Pad (INR)": 13373.43,
               "Brake Pad (Nos)": 4.0,
@@ -8581,31 +8581,31 @@ export const allServiceAdvisorYearlyPerformance: YearlyAdvisorPerformance[] = [
               "BAT (Nos)": 2.0,
               "TYRE (INR)": 0.0,
               "TYRE (Nos)": 0.0,
-              "Parts (INR)": 32833.08
+              "Parts (INR)": 34561.6
             }
           },
           {
             "advisorName": "ArunKumar",
-            "throughput": 30.0,
+            "throughput": 44.0,
             "revenueItems": {
-              "Throughput": 30.0,
-              "VAS (INR)": 41327.0,
-              "LAB": 39087.5,
-              "ACCES": 81188.28,
-              "LUB": 16404.7,
-              "Brake Pad (INR)": 0.0,
-              "Brake Pad (Nos)": 0.0,
+              "Throughput": 44.0,
+              "VAS (INR)": 73727.0,
+              "LAB": 66832.5,
+              "ACCES": 89319.05,
+              "LUB": 33305.07,
+              "Brake Pad (INR)": 7402.34,
+              "Brake Pad (Nos)": 5.0,
               "Wiper Blade (INR)": 11887.26,
               "Wiper Blade (Nos)": 41.0,
-              "Washer Fluid (INR)": 1084.73,
-              "Washer Fluid (Nos)": 17.0,
+              "Washer Fluid (INR)": 1999.96,
+              "Washer Fluid (Nos)": 32.0,
               "Wheel Alignment (INR)": 0.0,
-              "Wheel Alignment (Nos)": 19.0,
+              "Wheel Alignment (Nos)": 44.0,
               "BAT (INR)": 0.0,
               "BAT (Nos)": 0.0,
               "TYRE (INR)": 0.0,
               "TYRE (Nos)": 0.0,
-              "Parts (INR)": 173547.05
+              "Parts (INR)": 216306.26
             }
           },
           {
@@ -8634,9 +8634,9 @@ export const allServiceAdvisorYearlyPerformance: YearlyAdvisorPerformance[] = [
           },
           {
             "advisorName": "BhupalPal",
-            "throughput": 3.0,
+            "throughput": 4.0,
             "revenueItems": {
-              "Throughput": 3.0,
+              "Throughput": 4.0,
               "VAS (INR)": 0.0,
               "LAB": 8560.0,
               "ACCES": 2608.47,
@@ -8658,26 +8658,26 @@ export const allServiceAdvisorYearlyPerformance: YearlyAdvisorPerformance[] = [
           },
           {
             "advisorName": "DhaneshTripathi",
-            "throughput": 26.0,
+            "throughput": 39.0,
             "revenueItems": {
-              "Throughput": 26.0,
-              "VAS (INR)": 34958.0,
-              "LAB": 51717.83,
-              "ACCES": 3533.88,
-              "LUB": 29358.69,
+              "Throughput": 39.0,
+              "VAS (INR)": 49898.0,
+              "LAB": 73119.33,
+              "ACCES": 5605.07,
+              "LUB": 46242.95,
               "Brake Pad (INR)": 39518.74,
               "Brake Pad (Nos)": 17.0,
-              "Wiper Blade (INR)": 3828.81,
-              "Wiper Blade (Nos)": 14.0,
-              "Washer Fluid (INR)": 915.21,
-              "Washer Fluid (Nos)": 10.0,
+              "Wiper Blade (INR)": 5212.71,
+              "Wiper Blade (Nos)": 32.0,
+              "Washer Fluid (INR)": 1288.08,
+              "Washer Fluid (Nos)": 16.0,
               "Wheel Alignment (INR)": 0.0,
-              "Wheel Alignment (Nos)": 15.0,
-              "BAT (INR)": 6986.72,
-              "BAT (Nos)": 3.0,
+              "Wheel Alignment (Nos)": 22.0,
+              "BAT (INR)": 25788.51,
+              "BAT (Nos)": 14.0,
               "TYRE (INR)": 0.0,
               "TYRE (Nos)": 0.0,
-              "Parts (INR)": 179136.55
+              "Parts (INR)": 218919.67
             }
           },
           {
@@ -8730,11 +8730,11 @@ export const allServiceAdvisorYearlyPerformance: YearlyAdvisorPerformance[] = [
           },
           {
             "advisorName": "Mehdi.",
-            "throughput": 5.0,
+            "throughput": 7.0,
             "revenueItems": {
-              "Throughput": 5.0,
+              "Throughput": 7.0,
               "VAS (INR)": 2368.0,
-              "LAB": 65243.5,
+              "LAB": 90343.5,
               "ACCES": 0.0,
               "LUB": 1256.78,
               "Brake Pad (INR)": 0.0,
@@ -8749,31 +8749,31 @@ export const allServiceAdvisorYearlyPerformance: YearlyAdvisorPerformance[] = [
               "BAT (Nos)": 0.0,
               "TYRE (INR)": 0.0,
               "TYRE (Nos)": 0.0,
-              "Parts (INR)": 208316.08
+              "Parts (INR)": 219469.06
             }
           },
           {
             "advisorName": "NikhilKumar",
-            "throughput": 36.0,
+            "throughput": 49.0,
             "revenueItems": {
-              "Throughput": 36.0,
-              "VAS (INR)": 31990.0,
-              "LAB": 40235.0,
-              "ACCES": 24083.3,
-              "LUB": 9551.71,
+              "Throughput": 49.0,
+              "VAS (INR)": 36390.0,
+              "LAB": 46912.5,
+              "ACCES": 30218.92,
+              "LUB": 11222.05,
               "Brake Pad (INR)": 0.0,
               "Brake Pad (Nos)": 0.0,
               "Wiper Blade (INR)": 985.59,
               "Wiper Blade (Nos)": 5.0,
-              "Washer Fluid (INR)": 1491.5,
-              "Washer Fluid (Nos)": 32.0,
+              "Washer Fluid (INR)": 1999.98,
+              "Washer Fluid (Nos)": 41.0,
               "Wheel Alignment (INR)": 0.0,
               "Wheel Alignment (Nos)": 11.0,
-              "BAT (INR)": 49844.14000000001,
-              "BAT (Nos)": 12.0,
+              "BAT (INR)": 50788.43,
+              "BAT (Nos)": 16.0,
               "TYRE (INR)": 0.0,
               "TYRE (Nos)": 0.0,
-              "Parts (INR)": 187476.54
+              "Parts (INR)": 214566.01
             }
           },
           {
@@ -8802,37 +8802,37 @@ export const allServiceAdvisorYearlyPerformance: YearlyAdvisorPerformance[] = [
           },
           {
             "advisorName": "PriyanshuRoy",
-            "throughput": 28.0,
+            "throughput": 34.0,
             "revenueItems": {
-              "Throughput": 28.0,
-              "VAS (INR)": 25170.0,
-              "LAB": 31867.5,
-              "ACCES": 11325.59,
-              "LUB": 17294.51,
+              "Throughput": 34.0,
+              "VAS (INR)": 28770.0,
+              "LAB": 39942.5,
+              "ACCES": 12248.48,
+              "LUB": 21481.3,
               "Brake Pad (INR)": 0.0,
               "Brake Pad (Nos)": 0.0,
               "Wiper Blade (INR)": 1400.0,
               "Wiper Blade (Nos)": 21.0,
-              "Washer Fluid (INR)": 1016.94,
-              "Washer Fluid (Nos)": 20.0,
+              "Washer Fluid (INR)": 1186.43,
+              "Washer Fluid (Nos)": 23.0,
               "Wheel Alignment (INR)": 0.0,
-              "Wheel Alignment (Nos)": 19.0,
+              "Wheel Alignment (Nos)": 21.0,
               "BAT (INR)": 0.0,
               "BAT (Nos)": 0.0,
               "TYRE (INR)": 0.0,
               "TYRE (Nos)": 0.0,
-              "Parts (INR)": 106761.68
+              "Parts (INR)": 124244.09
             }
           },
           {
             "advisorName": "RaviPanchal",
-            "throughput": 8.0,
+            "throughput": 10.0,
             "revenueItems": {
-              "Throughput": 8.0,
-              "VAS (INR)": 0.0,
-              "LAB": 36791.0,
-              "ACCES": 546.09,
-              "LUB": 4258.47,
+              "Throughput": 10.0,
+              "VAS (INR)": 1800.0,
+              "LAB": 37791.0,
+              "ACCES": 584.23,
+              "LUB": 6122.88,
               "Brake Pad (INR)": 0.0,
               "Brake Pad (Nos)": 0.0,
               "Wiper Blade (INR)": 0.0,
@@ -8845,7 +8845,7 @@ export const allServiceAdvisorYearlyPerformance: YearlyAdvisorPerformance[] = [
               "BAT (Nos)": 0.0,
               "TYRE (INR)": 0.0,
               "TYRE (Nos)": 0.0,
-              "Parts (INR)": 81110.19
+              "Parts (INR)": 97921.9
             }
           },
           {
@@ -8898,26 +8898,26 @@ export const allServiceAdvisorYearlyPerformance: YearlyAdvisorPerformance[] = [
           },
           {
             "advisorName": "SumitDahiya",
-            "throughput": 18.0,
+            "throughput": 25.0,
             "revenueItems": {
-              "Throughput": 18.0,
-              "VAS (INR)": 17050.0,
-              "LAB": 33272.5,
-              "ACCES": 6636.2,
-              "LUB": 25289.87,
-              "Brake Pad (INR)": 20632.02,
-              "Brake Pad (Nos)": 10.0,
+              "Throughput": 25.0,
+              "VAS (INR)": 34970.0,
+              "LAB": 45680.0,
+              "ACCES": 8558.26,
+              "LUB": 30725.05,
+              "Brake Pad (INR)": 28034.36,
+              "Brake Pad (Nos)": 14.0,
               "Wiper Blade (INR)": 1400.0,
               "Wiper Blade (Nos)": 24.0,
-              "Washer Fluid (INR)": 915.21,
-              "Washer Fluid (Nos)": 9.0,
+              "Washer Fluid (INR)": 1186.39,
+              "Washer Fluid (Nos)": 12.0,
               "Wheel Alignment (INR)": 0.0,
-              "Wheel Alignment (Nos)": 14.0,
+              "Wheel Alignment (Nos)": 20.0,
               "BAT (INR)": 944.29,
               "BAT (Nos)": 4.0,
               "TYRE (INR)": 0.0,
               "TYRE (Nos)": 0.0,
-              "Parts (INR)": 45294.67
+              "Parts (INR)": 62366.4
             }
           },
           {
@@ -8946,26 +8946,26 @@ export const allServiceAdvisorYearlyPerformance: YearlyAdvisorPerformance[] = [
           },
           {
             "advisorName": "Yashvir SinghAswal",
-            "throughput": 33.0,
+            "throughput": 39.0,
             "revenueItems": {
-              "Throughput": 33.0,
-              "VAS (INR)": 25139.0,
-              "LAB": 52012.5,
-              "ACCES": 11315.33,
-              "LUB": 33938.03,
-              "Brake Pad (INR)": 27390.61,
-              "Brake Pad (Nos)": 14.0,
+              "Throughput": 39.0,
+              "VAS (INR)": 39319.0,
+              "LAB": 70547.5,
+              "ACCES": 16274.88,
+              "LUB": 44353.97,
+              "Brake Pad (INR)": 34149.2,
+              "Brake Pad (Nos)": 21.0,
               "Wiper Blade (INR)": 1749.16,
               "Wiper Blade (Nos)": 18.0,
-              "Washer Fluid (INR)": 1288.08,
-              "Washer Fluid (Nos)": 17.0,
+              "Washer Fluid (INR)": 1627.06,
+              "Washer Fluid (Nos)": 27.0,
               "Wheel Alignment (INR)": 0.0,
-              "Wheel Alignment (Nos)": 18.0,
+              "Wheel Alignment (Nos)": 22.0,
               "BAT (INR)": 0.0,
               "BAT (Nos)": 0.0,
               "TYRE (INR)": 0.0,
               "TYRE (Nos)": 0.0,
-              "Parts (INR)": 91256.1
+              "Parts (INR)": 162999.56
             }
           }
         ]
