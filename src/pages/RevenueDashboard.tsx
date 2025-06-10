@@ -116,7 +116,6 @@ const RevenueDashboard: React.FC = () => {
   const [monthlyTrendsChartData, setMonthlyTrendsChartData] = useState<MonthlyTrendItem[]>([]);
   const [selectedTrendMetricKey, setSelectedTrendMetricKey] = useState<keyof MonthlyTrendItem>('totalRevenue');
   const [isComparisonExpanded, setIsComparisonExpanded] = useState<boolean>(false);
-  const [radialChartData, setRadialChartData] = useState<any[]>([]);
 
   
   // State for KPI card values derived from kpiSourceData
@@ -276,42 +275,6 @@ const RevenueDashboard: React.FC = () => {
     setMonthlyTrendsChartData(trendsData);
 
   }, [selectedYear, allServiceAdvisorYearlyPerformance]);
-
-  // Effect to process data for the radial bar chart
-  React.useEffect(() => {
-    const yearData = detailedRevenueBreakdownData.ytd[selectedYear];
-    if (yearData) {
-      const dataForChart = [
-        {
-          name: 'Throughput',
-          value: (yearData.throughput.actual / yearData.throughput.target) * 100,
-          fill: '#4361ee',
-        },
-        {
-          name: 'Labour',
-          value: (yearData.labour.actual / yearData.labour.target) * 100,
-          fill: '#7209b7',
-        },
-        {
-          name: 'Parts',
-          value: (yearData.parts.actual / yearData.parts.target) * 100,
-          fill: '#f72585',
-        },
-        {
-          name: 'Accessories',
-          value: (yearData.accessories.actual / yearData.accessories.target) * 100,
-          fill: '#fb8500',
-        },
-        {
-          name: 'Lubricant',
-          value: (yearData.lubricant.actual / yearData.lubricant.target) * 100,
-          fill: '#ffc658',
-        },
-      ].filter(item => isFinite(item.value)); // Filter out NaN/Infinity values
-
-      setRadialChartData(dataForChart);
-    }
-  }, [selectedYear, detailedRevenueBreakdownData]);
 
   const trendMetricsOptions: { value: keyof MonthlyTrendItem; label: string; isCurrency: boolean }[] = [
     { value: 'totalRevenue', label: 'Total Revenue', isCurrency: true },
@@ -511,7 +474,7 @@ const RevenueDashboard: React.FC = () => {
     { name: 'Labor', value: chartDataSource.labour, color: '#4361ee' },
     { name: 'Parts', value: chartDataSource.parts, color: '#7209b7' },
     { name: 'Accessories', value: chartDataSource.accessories, color: '#fb8500' },
-    { name: 'Lubricant', value: chartDataSource.lubricant, color: '#ffc658' }, 
+    { name: 'Lubricant', value: chartDataSource.lubricant, color: '#ffc658' }, // Added Lubricant
   ];
   
 
@@ -1020,13 +983,13 @@ const RevenueDashboard: React.FC = () => {
                 cy="50%" 
                 innerRadius="20%" 
                 outerRadius="90%" 
-                data={radialChartData} 
+                data={radialBarData} 
                 startAngle={180} 
                 endAngle={0}
                 barSize={25}
               >
                 <defs>
-                  {radialChartData.map((entry, index) => (
+                  {radialBarData.map((entry, index) => (
                     <linearGradient key={`radialGradient-${index}`} id={`radialGradient-${index}`} x1="0" y1="0" x2="1" y2="0">
                       <stop offset="0%" stopColor={entry.fill} stopOpacity={0.8} />
                       <stop offset="100%" stopColor={entry.fill} stopOpacity={1} />
@@ -1048,7 +1011,7 @@ const RevenueDashboard: React.FC = () => {
                   animationDuration={1800}
                   animationEasing="ease-out"
                 >
-                  {radialChartData.map((_entry, index) => (
+                  {radialBarData.map((_entry, index) => (
                     <Cell 
                       key={`cell-${index}`} 
                       fill={`url(#radialGradient-${index})`}
