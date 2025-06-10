@@ -47,7 +47,6 @@ import StatCard from '../components/StatCard';
 import DataTable from '../components/DataTable';
 import PeriodComparisonCharts from '../components/PeriodComparisonCharts';
 import {
-  monthlyKpiData, // Corrected: From ../data/index.ts
   // previousYearData, // Corrected: From ../data/index.ts
 } from '../data';
 import { yearOnYearComparisonData, MonthlyComparisonData as YearOnYearMonthlyData } from '../data/yearOnYearComparisonData';
@@ -56,16 +55,6 @@ import { tillDateComparisonData } from '../data/tillDateComparisonData';
 import { detailedRevenueBreakdownData, MonthlyRevenueBreakdownEntry } from '../data/revenueInsightsData';
 import { allServiceAdvisorYearlyPerformance, AdvisorMonthlyPerformance } from '../data/advisorPerformanceData';
 
-// Local interface for data used in currentYearTotals and previousYearTotals
-interface MonthlyTotalsData {
-  month?: string; // Changed to optional to align with KpiData's inferred type
-  mechRo: number;
-  bpRo: number;
-  accessoriesRo: number;
-  partsRevenue?: number; // Optional as it might be missing or 0
-  labourRevenue?: number; // Optional as it might be missing or 0
-  // Add other fields from KpiData if needed by other parts of currentYearTotals/previousYearTotals
-} 
 
 // Helper functions
 const formatIndianCurrency = (value: number | undefined): string => {
@@ -116,6 +105,7 @@ const RevenueDashboard: React.FC = () => {
   const [monthlyTrendsChartData, setMonthlyTrendsChartData] = useState<MonthlyTrendItem[]>([]);
   const [selectedTrendMetricKey, setSelectedTrendMetricKey] = useState<keyof MonthlyTrendItem>('totalRevenue');
   const [isComparisonExpanded, setIsComparisonExpanded] = useState<boolean>(false);
+  const [radialChartData, setRadialChartData] = useState<any[]>([]);
 
   
   // State for KPI card values derived from kpiSourceData
@@ -365,7 +355,47 @@ const RevenueDashboard: React.FC = () => {
           pieParts = yearData.parts?.actual || 0;
           pieAccessories = yearData.accessories?.actual || 0;
           pieLubricant = yearData.lubricant?.actual || 0;
+
+          // Prepare data for Radial Bar Chart from revenueInsightsData
+          const newRadialData = [
+            {
+              name: 'Throughput',
+              value: (yearData.throughput.actual / (yearData.throughput.target || 1)) * 100,
+              target: yearData.throughput.target,
+              actual: yearData.throughput.actual,
+              fill: '#4361ee'
+            },
+            {
+              name: 'Labour',
+              value: (yearData.labour.actual / (yearData.labour.target || 1)) * 100,
+              target: yearData.labour.target,
+              actual: yearData.labour.actual,
+              fill: '#7209b7'
+            },
+            {
+              name: 'Parts',
+              value: (yearData.parts.actual / (yearData.parts.target || 1)) * 100,
+              target: yearData.parts.target,
+              actual: yearData.parts.actual,
+              fill: '#f72585'
+            },
+            {
+              name: 'Accessories',
+              value: (yearData.accessories.actual / (yearData.accessories.target || 1)) * 100,
+              target: yearData.accessories.target,
+              actual: yearData.accessories.actual,
+              fill: '#fb8500'
+            },
+          ].filter(item => item.target !== undefined); // Ensure we only show items with a target
+
+          // Cap value at a max (e.g., 150%) for better visualization if it exceeds target greatly
+          const cappedRadialData = newRadialData.map(item => ({...item, value: Math.min(item.value, 150)}));
+          setRadialChartData(cappedRadialData);
+        } else {
+          setRadialChartData([]);
         }
+      } else {
+        setRadialChartData([]);
       }
 
       // Update data source for charts
@@ -392,30 +422,6 @@ const RevenueDashboard: React.FC = () => {
     }
   }, [selectedMonth, selectedYear]);
 
-  // For backward compatibility with the existing dashboard
-  const currentYearData = monthlyKpiData;
-  // const previousYearEquivalent = previousYearData;
-  
-  const currentYearTotals = {
-    mechRo: currentYearData.reduce((sum: number, month: MonthlyTotalsData) => sum + month.mechRo, 0),
-    bpRo: currentYearData.reduce((sum: number, month: MonthlyTotalsData) => sum + month.bpRo, 0),
-    accessoriesRo: currentYearData.reduce((sum: number, month: MonthlyTotalsData) => sum + month.accessoriesRo, 0),
-    partsRevenue: currentYearData.reduce((sum: number, month: MonthlyTotalsData) => sum + (month.partsRevenue || 0), 0),
-    labourRevenue: currentYearData.reduce((sum: number, month: MonthlyTotalsData) => sum + (month.labourRevenue || 0), 0),
-  };
-  
-  // const previousYearTotals = {
-  //   mechRo: previousYearEquivalent.reduce((sum: number, month: MonthlyTotalsData) => sum + month.mechRo, 0),
-  //   bpRo: previousYearEquivalent.reduce((sum: number, month: MonthlyTotalsData) => sum + month.bpRo, 0),
-  //   accessoriesRo: previousYearEquivalent.reduce((sum: number, month: MonthlyTotalsData) => sum + month.accessoriesRo, 0),
-  //   partsRevenue: previousYearEquivalent.reduce((sum: number, month: MonthlyTotalsData) => sum + (month.partsRevenue || 0), 0),
-  //   labourRevenue: previousYearEquivalent.reduce((sum: number, month: MonthlyTotalsData) => sum + (month.labourRevenue || 0), 0),
-  // };
-  
-  // Calculate percentage changes for the original data (not used with new data structure)
-  // This is kept for backward compatibility with other parts of the dashboard
-  // that haven't been updated yet to use the new data structure
-  
   // Prepare data for year-on-year comparison chart using the new yearOnYearComparisonData.ts
   const displayComparisonData = yearOnYearComparisonData.map((monthlyData: YearOnYearMonthlyData) => {
     let data2024 = 0;
@@ -478,24 +484,7 @@ const RevenueDashboard: React.FC = () => {
   ];
   
 
-  // Prepare data for radial bar chart
-  const radialBarData = [
-    {
-      name: 'Mechanical',
-      value: (currentYearTotals.mechRo / 10000) * 100,
-      fill: '#4361ee'
-    },
-    {
-      name: 'Body & Paint',
-      value: (currentYearTotals.bpRo / 1500) * 100,
-      fill: '#7209b7'
-    },
-    {
-      name: 'Accessories',
-      value: (currentYearTotals.accessoriesRo / 500) * 100,
-      fill: '#f72585'
-    },
-  ];
+  // Data for the radial bar chart is now calculated in the useEffect hook and stored in radialChartData state.
   
   // Animation variants
   const containerVariants = {
@@ -983,13 +972,13 @@ const RevenueDashboard: React.FC = () => {
                 cy="50%" 
                 innerRadius="20%" 
                 outerRadius="90%" 
-                data={radialBarData} 
+                data={radialChartData} 
                 startAngle={180} 
                 endAngle={0}
                 barSize={25}
               >
                 <defs>
-                  {radialBarData.map((entry, index) => (
+                  {radialChartData.map((entry, index) => (
                     <linearGradient key={`radialGradient-${index}`} id={`radialGradient-${index}`} x1="0" y1="0" x2="1" y2="0">
                       <stop offset="0%" stopColor={entry.fill} stopOpacity={0.8} />
                       <stop offset="100%" stopColor={entry.fill} stopOpacity={1} />
@@ -997,6 +986,26 @@ const RevenueDashboard: React.FC = () => {
                   ))}
                 </defs>
                 <PolarGrid radialLines={false} />
+                <Tooltip
+                  content={({ payload }) => {
+                    if (payload && payload.length) {
+                      const { name, payload: itemPayload } = payload[0];
+                      return (
+                        <div className="custom-tooltip bg-white p-3 rounded-md shadow-lg border border-gray-200">
+                          <p className="font-semibold text-gray-800 mb-1">{name}</p>
+                          <p className="text-sm text-gray-700">Target: {itemPayload.target?.toLocaleString()}</p>
+                          <p className="text-sm text-gray-700">Actual: {itemPayload.actual?.toLocaleString()}</p>
+                          <p className="text-sm font-bold" style={{ color: itemPayload.fill }}>
+                            Achievement: {itemPayload.value.toFixed(1)}%
+                          </p>
+                        </div>
+                      );
+                    }
+                    return null;
+                  }}
+                  wrapperStyle={{ outline: 'none' }}
+                  cursor={{ stroke: '#f0f0f0', strokeWidth: 1, fill: 'rgba(240, 240, 240, 0.2)' }}
+                />
                 <RadialBar
                   background
                   dataKey="value"
@@ -1011,13 +1020,8 @@ const RevenueDashboard: React.FC = () => {
                   animationDuration={1800}
                   animationEasing="ease-out"
                 >
-                  {radialBarData.map((_entry, index) => (
-                    <Cell 
-                      key={`cell-${index}`} 
-                      fill={`url(#radialGradient-${index})`}
-                      stroke="#fff"
-                      strokeWidth={1}
-                    />
+                  {radialChartData.map((_entry, index) => (
+                    <Cell key={`cell-${index}`} fill={`url(#radialGradient-${index})`} />
                   ))}
                 </RadialBar>
                 <Legend 
