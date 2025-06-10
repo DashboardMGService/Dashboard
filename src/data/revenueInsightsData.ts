@@ -32,7 +32,7 @@ export const detailedRevenueBreakdownData: MonthlyRevenueBreakdownEntry[] = [
         },
         "labour": {
           "actual": 6370545.4,
-          "target": 1620000
+          "target": 2970000
         },
         "accessories": {
           "actual": 338455.76,
@@ -54,7 +54,7 @@ export const detailedRevenueBreakdownData: MonthlyRevenueBreakdownEntry[] = [
         },
         "labour": {
           "actual": 6049615.77,
-          "target": 2556621
+          "target": 4779770
         },
         "accessories": {
           "actual": 778562.61,
@@ -81,7 +81,7 @@ export const detailedRevenueBreakdownData: MonthlyRevenueBreakdownEntry[] = [
         },
         "labour": {
           "actual": 6525933.63,
-          "target": 1620000
+          "target": 2970000
         },
         "accessories": {
           "actual": 422319.08,
@@ -103,7 +103,7 @@ export const detailedRevenueBreakdownData: MonthlyRevenueBreakdownEntry[] = [
         },
         "labour": {
           "actual": 5788459.91,
-          "target": 2556621
+          "target": 4779770
         },
         "accessories": {
           "actual": 644402.5800000001,
@@ -130,7 +130,7 @@ export const detailedRevenueBreakdownData: MonthlyRevenueBreakdownEntry[] = [
         },
         "labour": {
           "actual": 7132473.23,
-          "target": 1620000
+          "target": 2970000
         },
         "accessories": {
           "actual": 483838.34,
@@ -152,7 +152,7 @@ export const detailedRevenueBreakdownData: MonthlyRevenueBreakdownEntry[] = [
         },
         "labour": {
           "actual": 5817061.859999999,
-          "target": 2731821
+          "target": 5107318
         },
         "accessories": {
           "actual": 489350.52999999997,
@@ -179,7 +179,7 @@ export const detailedRevenueBreakdownData: MonthlyRevenueBreakdownEntry[] = [
         },
         "labour": {
           "actual": 6206423.359999999,
-          "target": 1620000
+          "target": 2970000
         },
         "accessories": {
           "actual": 344989.6,
@@ -201,7 +201,7 @@ export const detailedRevenueBreakdownData: MonthlyRevenueBreakdownEntry[] = [
         },
         "labour": {
           "actual": 5565809.98,
-          "target": 2885392
+          "target": 5394428
         },
         "accessories": {
           "actual": 615618.6100000001,
@@ -228,7 +228,7 @@ export const detailedRevenueBreakdownData: MonthlyRevenueBreakdownEntry[] = [
         },
         "labour": {
           "actual": 6031831.95,
-          "target": 1620000
+          "target": 2970000
         },
         "accessories": {
           "actual": 361602.81,
@@ -250,7 +250,7 @@ export const detailedRevenueBreakdownData: MonthlyRevenueBreakdownEntry[] = [
         },
         "labour": {
           "actual": 5682885.129999999,
-          "target": 2844295
+          "target": 5317595
         },
         "accessories": {
           "actual": 708579.85,
@@ -277,7 +277,7 @@ export const detailedRevenueBreakdownData: MonthlyRevenueBreakdownEntry[] = [
         },
         "labour": {
           "actual": 5402257.23,
-          "target": 1620000
+          "target": 2970000
         },
         "accessories": {
           "actual": 405273.26000000007,
@@ -299,7 +299,7 @@ export const detailedRevenueBreakdownData: MonthlyRevenueBreakdownEntry[] = [
         },
         "labour": {
           "actual": 1096784.4100000001,
-          "target": 2954606
+          "target": 5523829
         },
         "accessories": {
           "actual": 191397.63999999998,
@@ -326,7 +326,7 @@ export const detailedRevenueBreakdownData: MonthlyRevenueBreakdownEntry[] = [
         },
         "labour": {
           "actual": 6817399.130000001,
-          "target": 1620000
+          "target": 2970000
         },
         "accessories": {
           "actual": 439602.92999999993,
@@ -348,7 +348,7 @@ export const detailedRevenueBreakdownData: MonthlyRevenueBreakdownEntry[] = [
         },
         "labour": {
           "actual": 0,
-          "target": 3311495
+          "target": 6191056
         },
         "accessories": {
           "actual": 0,
@@ -375,7 +375,7 @@ export const detailedRevenueBreakdownData: MonthlyRevenueBreakdownEntry[] = [
         },
         "labour": {
           "actual": 6026374.74,
-          "target": 1620000
+          "target": 2970000
         },
         "accessories": {
           "actual": 321849.04,
@@ -397,7 +397,7 @@ export const detailedRevenueBreakdownData: MonthlyRevenueBreakdownEntry[] = [
         },
         "labour": {
           "actual": 0,
-          "target": 3181718
+          "target": 5948489
         },
         "accessories": {
           "actual": 0,
@@ -424,7 +424,7 @@ export const detailedRevenueBreakdownData: MonthlyRevenueBreakdownEntry[] = [
         },
         "labour": {
           "actual": 5860286.15,
-          "target": 1620000
+          "target": 2970000
         },
         "accessories": {
           "actual": 411469.73000000004,
@@ -446,7 +446,7 @@ export const detailedRevenueBreakdownData: MonthlyRevenueBreakdownEntry[] = [
         },
         "labour": {
           "actual": 0,
-          "target": 3116829
+          "target": 5827115
         },
         "accessories": {
           "actual": 0,
@@ -473,7 +473,7 @@ export const detailedRevenueBreakdownData: MonthlyRevenueBreakdownEntry[] = [
         },
         "labour": {
           "actual": 5741198.140000001,
-          "target": 1620000
+          "target": 2970000
         },
         "accessories": {
           "actual": 267003.39,
@@ -495,7 +495,7 @@ export const detailedRevenueBreakdownData: MonthlyRevenueBreakdownEntry[] = [
         },
         "labour": {
           "actual": 0,
-          "target": 3605658
+          "target": 6739213
         },
         "accessories": {
           "actual": 0,
@@ -522,7 +522,7 @@ export const detailedRevenueBreakdownData: MonthlyRevenueBreakdownEntry[] = [
         },
         "labour": {
           "actual": 7918265.1,
-          "target": 1620000
+          "target": 2970000
         },
         "accessories": {
           "actual": 296888.1,
@@ -544,7 +544,7 @@ export const detailedRevenueBreakdownData: MonthlyRevenueBreakdownEntry[] = [
         },
         "labour": {
           "actual": 0,
-          "target": 3097362
+          "target": 5790720
         },
         "accessories": {
           "actual": 0,
@@ -571,7 +571,7 @@ export const detailedRevenueBreakdownData: MonthlyRevenueBreakdownEntry[] = [
         },
         "labour": {
           "actual": 7094024.59,
-          "target": 1620000
+          "target": 2970000
         },
         "accessories": {
           "actual": 293038.20999999996,
@@ -593,7 +593,7 @@ export const detailedRevenueBreakdownData: MonthlyRevenueBreakdownEntry[] = [
         },
         "labour": {
           "actual": 0,
-          "target": 2974073
+          "target": 5560224
         },
         "accessories": {
           "actual": 0,
