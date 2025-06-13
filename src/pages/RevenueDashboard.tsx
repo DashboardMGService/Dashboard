@@ -107,6 +107,14 @@ const RevenueDashboard: React.FC = () => {
   const [isComparisonExpanded, setIsComparisonExpanded] = useState<boolean>(false);
   const [radialChartData, setRadialChartData] = useState<any[]>([]);
 
+  const comparisonOptions = [
+    { key: 'mechRo', label: 'Mechanical', fullLabel: 'Mechanical Throughput', icon: <Car size={14} /> },
+    { key: 'bpRo', label: 'Body & Paint', fullLabel: 'Body & Paint Throughput', icon: <Briefcase size={14} /> },
+    { key: 'accessoriesRo', label: 'Accessories', fullLabel: 'Accessories Revenue', icon: <Coins size={14} /> },
+    { key: 'partsRevenue', label: 'Parts', fullLabel: 'Parts Revenue', icon: <BarChart2 size={14} /> },
+    { key: 'labourRevenue', label: 'Labour', fullLabel: 'Labour Revenue', icon: <DollarSign size={14} /> },
+  ];
+
   
   // State for KPI card values derived from kpiSourceData
   const [kpiCardValues, setKpiCardValues] = useState<{
@@ -660,38 +668,33 @@ const RevenueDashboard: React.FC = () => {
       {/* Monthly Comparison - Show when comparison tab is active or always in overview */}
       <motion.div variants={itemVariants} className="card overflow-hidden bg-gradient-to-br from-white to-gray-50 border border-gray-100">
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-lg font-bold bg-gradient-to-r from-primary-600 to-secondary-500 bg-clip-text text-transparent">Year-on-Year Comparison</h2>
-          <div className="flex gap-2 bg-gray-100 p-1 rounded-lg">
-            <button
-              onClick={() => setComparisonMetric('mechRo')}
-              className={`btn text-xs py-1 px-3 ${comparisonMetric === 'mechRo' ? 'bg-white text-primary-600 shadow-sm' : 'bg-transparent text-gray-600'}`}
-            >
-              Mechanical
-            </button>
-            <button
-              onClick={() => setComparisonMetric('bpRo')}
-              className={`btn text-xs py-1 px-3 ${comparisonMetric === 'bpRo' ? 'bg-white text-primary-600 shadow-sm' : 'bg-transparent text-gray-600'}`}
-            >
-              Body & Paint
-            </button>
-            <button
-              onClick={() => setComparisonMetric('accessoriesRo')}
-              className={`btn text-xs py-1 px-3 ${comparisonMetric === 'accessoriesRo' ? 'bg-white text-primary-600 shadow-sm' : 'bg-transparent text-gray-600'}`}
-            >
-              Accessories
-            </button>
-            <button
-              onClick={() => setComparisonMetric('partsRevenue')}
-              className={`btn text-xs py-1 px-3 ${comparisonMetric === 'partsRevenue' ? 'bg-white text-primary-600 shadow-sm' : 'bg-transparent text-gray-600'}`}
-            >
-              Parts
-            </button>
-            <button
-              onClick={() => setComparisonMetric('labourRevenue')}
-              className={`btn text-xs py-1 px-3 ${comparisonMetric === 'labourRevenue' ? 'bg-white text-primary-600 shadow-sm' : 'bg-transparent text-gray-600'}`}
-            >
-              Labour
-            </button>
+          <div>
+            <h2 className="text-lg font-bold bg-gradient-to-r from-primary-600 to-secondary-500 bg-clip-text text-transparent">Year-on-Year Comparison</h2>
+            <p className="text-sm text-gray-500 mt-1">
+              <span className="font-semibold text-primary-600">{comparisonOptions.find(opt => opt.key === comparisonMetric)?.fullLabel}</span>
+            </p>
+          </div>
+          <div className="flex space-x-1 bg-gray-200 p-1 rounded-full">
+            {comparisonOptions.map((option) => (
+              <button
+                key={option.key}
+                onClick={() => setComparisonMetric(option.key)}
+                className={`relative px-3 py-1.5 text-sm font-medium rounded-full focus:outline-none transition-colors duration-300 flex items-center gap-2 ${
+                  comparisonMetric === option.key ? 'text-primary-700' : 'text-gray-600 hover:text-gray-800'
+                }`}
+              >
+                {comparisonMetric === option.key && (
+                  <motion.div
+                    layoutId="comparison-metric-active-pill"
+                    className="absolute inset-0 bg-white rounded-full shadow-md"
+                    style={{ borderRadius: 9999 }}
+                    transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+                  />
+                )}
+                <span className="relative z-10">{option.icon}</span>
+                <span className="relative z-10">{option.label}</span>
+              </button>
+            ))}
           </div>
         </div>
         
