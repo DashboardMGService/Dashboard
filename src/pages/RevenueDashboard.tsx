@@ -22,7 +22,8 @@ import {
   Scatter,
   LabelList,
   Sector,
-  PolarGrid
+  PolarGrid,
+  LegendType
 } from 'recharts';
 import { 
   BarChart2, 
@@ -481,6 +482,12 @@ const RevenueDashboard: React.FC = () => {
     show: { y: 0, opacity: 1 }
   };
 
+  const legendPayload: { value: string; type: LegendType; id: string; color: string; }[] = [
+    { value: 'Target', type: 'circle', id: 'ID01', color: '#2ec4b6' },
+    { value: '2024', type: 'circle', id: 'ID02', color: '#4361ee' },
+    { value: '2025', type: 'circle', id: 'ID03', color: '#f72585' },
+  ];
+
   // Custom tooltip for the comparison chart
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
@@ -712,10 +719,10 @@ const RevenueDashboard: React.FC = () => {
                 cursor={{ stroke: '#f0f0f0', strokeWidth: 1, fill: 'rgba(240, 240, 240, 0.2)' }}
               />
               <Legend 
+                payload={legendPayload}
                 wrapperStyle={{ paddingTop: '10px' }}
-                iconType="circle"
                 iconSize={8}
-                formatter={(value) => <span style={{ color: value === '2024' ? '#4361ee' : value === '2025' ? '#f72585' : '#2ec4b6', fontWeight: 500 }}>{value}</span>}
+                formatter={(value, entry) => <span style={{ color: entry.color, fontWeight: 500 }}>{value}</span>}
               />
               
               {/* Reference area to highlight target achievement */}
