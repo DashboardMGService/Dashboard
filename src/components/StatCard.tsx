@@ -161,18 +161,18 @@ const StatCard: React.FC<StatCardProps> = ({
 
         {/* Back Side */}
         <div
-          className="absolute inset-0 bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 flex flex-col justify-center items-center"
+          className={`stat-card absolute inset-0 ${colorClasses[color]} ${className} w-full h-full flex flex-col justify-center items-center`}
           style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}
         >
-          <h4 className="text-md font-semibold text-gray-800 dark:text-white mb-2">{title} Breakdown</h4>
-          <div className="flex justify-around w-full">
+          <h4 className="text-sm font-medium text-gray-500 mb-2">{title} Breakdown</h4>
+          <div className="flex justify-around w-full mt-2">
             <div className="text-center">
-              <p className="text-sm text-gray-500 dark:text-gray-400">Mechanical</p>
-              <p className="text-lg font-bold text-gray-800 dark:text-white">{formatIndianCurrency(mechValue)}</p>
+              <p className="text-sm font-medium text-gray-500">Mechanical</p>
+              <p className="text-lg font-bold bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent">{formatIndianCurrency(mechValue)}</p>
             </div>
             <div className="text-center">
-              <p className="text-sm text-gray-500 dark:text-gray-400">Body & Paint</p>
-              <p className="text-lg font-bold text-gray-800 dark:text-white">{formatIndianCurrency(bpValue)}</p>
+              <p className="text-sm font-medium text-gray-500">Body & Paint</p>
+              <p className="text-lg font-bold bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent">{formatIndianCurrency(bpValue)}</p>
             </div>
           </div>
         </div>
