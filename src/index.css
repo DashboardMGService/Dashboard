@@ -40,9 +40,7 @@ body {
   }
 
   .stat-card {
-    @apply bg-white rounded-xl shadow-md p-6 transition-all duration-300 relative overflow-hidden border-l-4 backdrop-blur-sm;
-    background: rgba(255, 255, 255, 0.8);
-    backdrop-filter: blur(10px);
+    @apply bg-white rounded-xl shadow-md p-6 transition-all duration-300 border-l-4 relative overflow-hidden;
   }
 
   .card:hover {

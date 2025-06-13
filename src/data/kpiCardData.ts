@@ -19,7 +19,7 @@ export interface MonthlyComparisonData {
   labourRevenue: { '2024': number; '2025': number; target: number; percentChange?: number };
 }
 
-const raw2025Data: Array<any> = [
+export const raw2025Data: Array<any> = [
   {
     "month": "Apr",
     "mechRo": { "total": 1123 },
@@ -88,7 +88,7 @@ const raw2025Data: Array<any> = [
   }
 ];
 
-const raw2024Data: Array<any> = [
+export const raw2024Data: Array<any> = [
   {
     "month": "Apr",
     "mechRo": { "total": 1529 },

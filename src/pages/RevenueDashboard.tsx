@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { FaTools, FaHardHat, FaCog } from 'react-icons/fa';
 import { motion } from 'framer-motion';
 import { 
   BarChart, 
@@ -26,7 +27,7 @@ import {
 import { 
   BarChart2, 
   Car, 
-  DollarSign, 
+  IndianRupee, 
   Coins, 
   Users,
   Briefcase // Added Briefcase icon
@@ -50,17 +51,14 @@ import {
   // previousYearData, // Corrected: From ../data/index.ts
 } from '../data';
 import { yearOnYearComparisonData, MonthlyComparisonData as YearOnYearMonthlyData } from '../data/yearOnYearComparisonData';
-import { yearOnYearComparisonData as kpiSourceData } from '../data/kpiCardData.ts';
+import { yearOnYearComparisonData as kpiSourceData, raw2024Data, raw2025Data } from '../data/kpiCardData.ts';
 import { tillDateComparisonData } from '../data/tillDateComparisonData';
 import { detailedRevenueBreakdownData, MonthlyRevenueBreakdownEntry } from '../data/revenueInsightsData';
 import { allServiceAdvisorYearlyPerformance, AdvisorMonthlyPerformance } from '../data/advisorPerformanceData';
+import { formatIndianCurrency } from '../utils/formatting';
 
 
-// Helper functions
-const formatIndianCurrency = (value: number | undefined): string => {
-  if (value === undefined || isNaN(value)) return '₹0';
-  return `₹${value.toLocaleString('en-IN', { maximumFractionDigits: 0 })}`;
-};
+
 
 interface MonthlyTrendItem {
   month: string;
@@ -112,7 +110,7 @@ const RevenueDashboard: React.FC = () => {
     { key: 'bpRo', label: 'Body & Paint', fullLabel: 'Body & Paint Throughput', icon: <Briefcase size={14} /> },
     { key: 'accessoriesRo', label: 'Accessories', fullLabel: 'Accessories Revenue', icon: <Coins size={14} /> },
     { key: 'partsRevenue', label: 'Parts', fullLabel: 'Parts Revenue', icon: <BarChart2 size={14} /> },
-    { key: 'labourRevenue', label: 'Labour', fullLabel: 'Labour Revenue', icon: <DollarSign size={14} /> },
+    { key: 'labourRevenue', label: 'Labour', fullLabel: 'Labour Revenue', icon: <IndianRupee size={14} /> },
   ];
 
   
@@ -127,6 +125,13 @@ const RevenueDashboard: React.FC = () => {
     labourRevenue: { current: 0, previous: 0, percentChange: 0 },
     partsRevenue: { current: 0, previous: 0, percentChange: 0 },
     totalRevenue: { current: 0, previous: 0, percentChange: 0 },
+  });
+
+  const [kpiBreakdownValues, setKpiBreakdownValues] = useState({
+    throughput: { mech: 0, bp: 0 },
+    labourRevenue: { mech: 0, bp: 0 },
+    partsRevenue: { mech: 0, bp: 0 },
+    totalRevenue: { mech: 0, bp: 0 },
   });
 
   // State for other charts that previously used 'totals', 'mechData', 'bodyData'
@@ -292,7 +297,6 @@ const RevenueDashboard: React.FC = () => {
 
     if (dataForMonth) {
       const yearKey = selectedYear.toString() as '2024' | '2025';
-      // prevYearKey was unused, removed.
 
       const currentThroughput = dataForMonth.throughput[yearKey] || 0;
       const currentLabourRevenue = dataForMonth.labourRevenue[yearKey] || 0;
@@ -315,41 +319,44 @@ const RevenueDashboard: React.FC = () => {
       }
       
       setKpiCardValues({
-        throughput: {
-          current: currentThroughput,
-          previous: prevThroughput,
-          percentChange: dataForMonth.throughput?.percentChange
-        },
-        labourRevenue: {
-          current: currentLabourRevenue,
-          previous: prevLabourRevenue,
-          percentChange: dataForMonth?.labourRevenue?.percentChange
-        },
-        partsRevenue: {
-          current: currentPartsRevenue,
-          previous: prevPartsRevenue,
-          percentChange: dataForMonth?.partsRevenue?.percentChange
-        },
-        // Total Revenue percent change needs to be calculated based on the totals, 
-        // as it's not a direct field in kpiSourceData like the others.
-        // Or, we can add totalRevenue with percentChange to kpiCardData.ts if preferred.
-        // For now, let's calculate it here if currentPeriodData exists.
-        totalRevenue: {
-          current: currentTotalRevenue,
-          previous: prevTotalRevenue,
-          percentChange: (prevTotalRevenue === 0) ? (currentTotalRevenue > 0 ? undefined : 0) : parseFloat((((currentTotalRevenue - prevTotalRevenue) / prevTotalRevenue) * 100).toFixed(2))
-        }
+        throughput: { current: currentThroughput, previous: prevThroughput, percentChange: dataForMonth.throughput?.percentChange },
+        labourRevenue: { current: currentLabourRevenue, previous: prevLabourRevenue, percentChange: dataForMonth?.labourRevenue?.percentChange },
+        partsRevenue: { current: currentPartsRevenue, previous: prevPartsRevenue, percentChange: dataForMonth?.partsRevenue?.percentChange },
+        totalRevenue: { current: currentTotalRevenue, previous: prevTotalRevenue, percentChange: (prevTotalRevenue === 0) ? (currentTotalRevenue > 0 ? undefined : 0) : parseFloat((((currentTotalRevenue - prevTotalRevenue) / prevTotalRevenue) * 100).toFixed(2)) }
       });
+
+      // Calculate and set breakdown values
+      const rawData = selectedYear === 2025 ? raw2025Data : raw2024Data;
+      const monthRawData = rawData.find(d => d.month === currentMonthStr);
+
+      if (monthRawData) {
+        const mechThroughput = monthRawData.mechRo?.total || 0;
+        const bpThroughput = monthRawData.bpRo?.total || 0;
+        const mechLabour = monthRawData.mechLaborRevenue || 0;
+        const bpLabour = monthRawData.bpLaborRevenue || 0;
+        const mechParts = monthRawData.mechParts || 0;
+        const bpParts = monthRawData.bpParts || 0;
+        const mechAccessories = monthRawData.mechAccessories || 0;
+        const bpAccessories = monthRawData.bpAccessories || 0;
+        const mechTotalRevenue = mechLabour + mechParts + mechAccessories;
+        const bpTotalRevenue = bpLabour + bpParts + bpAccessories;
+
+        setKpiBreakdownValues({
+          throughput: { mech: mechThroughput, bp: bpThroughput },
+          labourRevenue: { mech: mechLabour, bp: bpLabour },
+          partsRevenue: { mech: mechParts, bp: bpParts },
+          totalRevenue: { mech: mechTotalRevenue, bp: bpTotalRevenue },
+        });
+      } else {
+        setKpiBreakdownValues({ throughput: { mech: 0, bp: 0 }, labourRevenue: { mech: 0, bp: 0 }, partsRevenue: { mech: 0, bp: 0 }, totalRevenue: { mech: 0, bp: 0 } });
+      }
 
       // Fetch data for pie chart from detailedRevenueBreakdownData
       const insightsEntry = detailedRevenueBreakdownData.find(
         (entry: MonthlyRevenueBreakdownEntry) => entry.month === currentMonthStr
       );
 
-      let pieLabour = 0;
-      let pieParts = 0;
-      let pieAccessories = 0;
-      let pieLubricant = 0;
+      let pieLabour = 0, pieParts = 0, pieAccessories = 0, pieLubricant = 0;
 
       if (insightsEntry) {
         const yearStr = selectedYear.toString() as '2024' | '2025';
@@ -360,39 +367,13 @@ const RevenueDashboard: React.FC = () => {
           pieAccessories = yearData.accessories?.actual || 0;
           pieLubricant = yearData.lubricant?.actual || 0;
 
-          // Prepare data for Radial Bar Chart from revenueInsightsData
           const newRadialData = [
-            {
-              name: 'Throughput',
-              value: (yearData.throughput.actual / (yearData.throughput.target || 1)) * 100,
-              target: yearData.throughput.target,
-              actual: yearData.throughput.actual,
-              fill: '#4361ee'
-            },
-            {
-              name: 'Labour',
-              value: (yearData.labour.actual / (yearData.labour.target || 1)) * 100,
-              target: yearData.labour.target,
-              actual: yearData.labour.actual,
-              fill: '#7209b7'
-            },
-            {
-              name: 'Parts',
-              value: (yearData.parts.actual / (yearData.parts.target || 1)) * 100,
-              target: yearData.parts.target,
-              actual: yearData.parts.actual,
-              fill: '#f72585'
-            },
-            {
-              name: 'Accessories',
-              value: (yearData.accessories.actual / (yearData.accessories.target || 1)) * 100,
-              target: yearData.accessories.target,
-              actual: yearData.accessories.actual,
-              fill: '#fb8500'
-            },
-          ].filter(item => item.target !== undefined); // Ensure we only show items with a target
+            { name: 'Throughput', value: (yearData.throughput.actual / (yearData.throughput.target || 1)) * 100, target: yearData.throughput.target, actual: yearData.throughput.actual, fill: '#4361ee' },
+            { name: 'Labour', value: (yearData.labour.actual / (yearData.labour.target || 1)) * 100, target: yearData.labour.target, actual: yearData.labour.actual, fill: '#7209b7' },
+            { name: 'Parts', value: (yearData.parts.actual / (yearData.parts.target || 1)) * 100, target: yearData.parts.target, actual: yearData.parts.actual, fill: '#f72585' },
+            { name: 'Accessories', value: (yearData.accessories.actual / (yearData.accessories.target || 1)) * 100, target: yearData.accessories.target, actual: yearData.accessories.actual, fill: '#fb8500' },
+          ].filter(item => item.target !== undefined);
 
-          // Cap value at a max (e.g., 150%) for better visualization if it exceeds target greatly
           const cappedRadialData = newRadialData.map(item => ({...item, value: Math.min(item.value, 150)}));
           setRadialChartData(cappedRadialData);
         } else {
@@ -402,26 +383,20 @@ const RevenueDashboard: React.FC = () => {
         setRadialChartData([]);
       }
 
-      // Update data source for charts
       setChartDataSource({
-        throughput: currentThroughput, // From kpiSourceData
-        labour: pieLabour, // From detailedRevenueBreakdownData for pie chart
-        parts: pieParts, // From detailedRevenueBreakdownData for pie chart
-        accessories: pieAccessories, // From detailedRevenueBreakdownData for pie chart
-        lubricant: pieLubricant, // From detailedRevenueBreakdownData for pie chart
-        vas: 0, // Placeholder for VAS
-        totalRevenue: currentTotalRevenue, // Calculated from kpiSourceData parts/labour/accessories
-        serviceAdvisorCount: currentThroughput // Using total ROs as a proxy for service advisor activity count
+        throughput: currentThroughput,
+        labour: pieLabour,
+        parts: pieParts,
+        accessories: pieAccessories,
+        lubricant: pieLubricant,
+        vas: 0,
+        totalRevenue: currentTotalRevenue,
+        serviceAdvisorCount: currentThroughput
       });
 
     } else {
-      // Reset if data for month not found
-      setKpiCardValues({
-        throughput: { current: 0, previous: 0, percentChange: 0 },
-        labourRevenue: { current: 0, previous: 0, percentChange: 0 },
-        partsRevenue: { current: 0, previous: 0, percentChange: 0 },
-        totalRevenue: { current: 0, previous: 0, percentChange: 0 },
-      });
+      setKpiCardValues({ throughput: { current: 0, previous: 0, percentChange: 0 }, labourRevenue: { current: 0, previous: 0, percentChange: 0 }, partsRevenue: { current: 0, previous: 0, percentChange: 0 }, totalRevenue: { current: 0, previous: 0, percentChange: 0 } });
+      setKpiBreakdownValues({ throughput: { mech: 0, bp: 0 }, labourRevenue: { mech: 0, bp: 0 }, partsRevenue: { mech: 0, bp: 0 }, totalRevenue: { mech: 0, bp: 0 } });
       setChartDataSource({ throughput: 0, labour: 0, parts: 0, accessories: 0, lubricant: 0, vas: 0, totalRevenue: 0, serviceAdvisorCount: 0 });
     }
   }, [selectedMonth, selectedYear]);
@@ -622,12 +597,13 @@ const RevenueDashboard: React.FC = () => {
       <motion.div variants={itemVariants} className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
         <motion.div variants={itemVariants}>
           <StatCard 
-            title="Throughput (ROs)"
-            value={kpiCardValues.throughput.current.toLocaleString() || '0'}
+            title="Throughput"
+            value={kpiCardValues.throughput.current.toString()}
             percentChange={kpiCardValues.throughput.percentChange}
-            icon={<Car className="text-primary-500" size={24} />}
-            color="primary"
-            subValue={`Prev: ${kpiCardValues.throughput.previous.toLocaleString()}`}
+            icon={<FaTools className="text-accent" size={24} />}
+            color="accent"
+            mechValue={kpiBreakdownValues.throughput.mech}
+            bpValue={kpiBreakdownValues.throughput.bp}
           />
         </motion.div>
         
@@ -636,9 +612,10 @@ const RevenueDashboard: React.FC = () => {
             title="Labour Revenue"
             value={formatIndianCurrency(kpiCardValues.labourRevenue.current)}
             percentChange={kpiCardValues.labourRevenue.percentChange}
-            icon={<Briefcase className="text-success-500" size={24} />}
+            icon={<FaHardHat className="text-success" size={24} />}
             color="success"
-            subValue={`Prev: ${formatIndianCurrency(kpiCardValues.labourRevenue.previous)}`}
+            mechValue={kpiBreakdownValues.labourRevenue.mech}
+            bpValue={kpiBreakdownValues.labourRevenue.bp}
           />
         </motion.div>
         
@@ -647,9 +624,10 @@ const RevenueDashboard: React.FC = () => {
             title="Parts Revenue"
             value={formatIndianCurrency(kpiCardValues.partsRevenue.current)}
             percentChange={kpiCardValues.partsRevenue.percentChange}
-            icon={<BarChart2 className="text-accent-500" size={24} />}
-            color="accent"
-            subValue={`Prev: ${formatIndianCurrency(kpiCardValues.partsRevenue.previous)}`}
+            icon={<FaCog className="text-warning" size={24} />}
+            color="warning"
+            mechValue={kpiBreakdownValues.partsRevenue.mech}
+            bpValue={kpiBreakdownValues.partsRevenue.bp}
           />
         </motion.div>
         
@@ -658,13 +636,13 @@ const RevenueDashboard: React.FC = () => {
             title="Total Revenue"
             value={formatIndianCurrency(kpiCardValues.totalRevenue.current)}
             percentChange={kpiCardValues.totalRevenue.percentChange}
-            icon={<DollarSign className="text-success-500" size={24} />}
-            color="success"
-            subValue={`Prev: ${formatIndianCurrency(kpiCardValues.totalRevenue.previous)}`}
+            icon={<IndianRupee className="text-primary" size={24} />}
+            color="primary"
+            mechValue={kpiBreakdownValues.totalRevenue.mech}
+            bpValue={kpiBreakdownValues.totalRevenue.bp}
           />
         </motion.div>
       </motion.div>
-      
       {/* Monthly Comparison - Show when comparison tab is active or always in overview */}
       <motion.div variants={itemVariants} className="card overflow-hidden bg-gradient-to-br from-white to-gray-50 border border-gray-100">
         <div className="flex justify-between items-center mb-4">
