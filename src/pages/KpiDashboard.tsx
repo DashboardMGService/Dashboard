@@ -25,6 +25,8 @@ import StatCard from '../components/StatCard';
 import ProgressBar from '../components/ProgressBar';
 import { kpiDataByYear, type MonthlyKpi } from '../data/kpiDashboardData';
 import MultivariateChart from '../components/MultivariateChart';
+import PredictionsSection, { TransformedPredictionDataForChart } from '../components/PredictionsSection'; // Import the new component and its data type
+import { yearOnYearComparisonData as predictionSourceData, PredictedMonthlyComparisonData } from '../data/kpiCardData'; // Import prediction data source and its original type
 
 const KpiDashboard: React.FC = () => {
   const [selectedYear, setSelectedYear] = useState<number>(2025);
@@ -109,6 +111,25 @@ const KpiDashboard: React.FC = () => {
     hidden: { y: 20, opacity: 0 },
     show: { y: 0, opacity: 1 }
   };
+
+  // Transform prediction data for the PredictionsSection chart
+  const transformedPredictionData = useMemo((): TransformedPredictionDataForChart[] => {
+    // Filter for months from April to September for a focused view including predictions
+    const relevantMonths = ['Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep'];
+    return predictionSourceData
+      .filter(item => relevantMonths.includes(item.month))
+      .map((item: PredictedMonthlyComparisonData) => ({
+        month: item.month,
+        mechRo_actual: item.mechRo['2025'],
+        mechRo_predicted: item.mechRoPredicted,
+        bpRo_actual: item.bpRo['2025'],
+        bpRo_predicted: item.bpRoPredicted,
+        partsRevenue_actual: item.partsRevenue['2025'],
+        partsRevenue_predicted: item.partsRevenuePredicted,
+        labourRevenue_actual: item.labourRevenue['2025'],
+        labourRevenue_predicted: item.labourRevenuePredicted,
+      }));
+  }, []);
 
   return (
     <motion.div 
@@ -390,11 +411,16 @@ const KpiDashboard: React.FC = () => {
         </motion.div>
       </div>
 
+      {/* Predictions Section Card */}
+      <motion.div variants={itemVariants} className="mb-6 w-full">
+        <PredictionsSection dataForChart={transformedPredictionData} />
+      </motion.div>
+
       {/* Monthly KPI Summary */}
       <motion.div variants={itemVariants} className="card">
         <div className="flex items-center mb-4">
           <Calendar className="text-primary-500 mr-2" size={20} />
-          <h2 className="text-lg font-semibold">Monthly KPI Summary</h2>
+        <h2 className="text-xl font-semibold mb-4">Monthly KPI Summary</h2>
         </div>
         
         <div className="overflow-x-auto">
