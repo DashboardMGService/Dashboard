@@ -294,23 +294,23 @@ export const detailedRevenueBreakdownData: MonthlyRevenueBreakdownEntry[] = [
       },
       "2025": {
         "throughput": {
-          "actual": 663,
+          "actual": 808,
           "target": 1538.611521
         },
         "labour": {
-          "actual": 2515546.24,
+          "actual": 3200877.44,
           "target": 10476829.539
         },
         "accessories": {
-          "actual": 279931.11000000004,
+          "actual": 342105.11,
           "target": 1513211.521
         },
         "lubricant": {
-          "actual": 472973.39999999997,
+          "actual": 562078.21,
           "target": 1219650.369
         },
         "parts": {
-          "actual": 7101406.369999999,
+          "actual": 8339465.27,
           "target": 18333355.829
         }
       }

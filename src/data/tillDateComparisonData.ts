@@ -86,10 +86,10 @@ export const tillDateComparisonData: TillDateComparisonMainData = {
   "ytd": {
     "throughput": {
       "summary": {
-        "current": 7072,
+        "current": 7217,
         "previous": 9727,
         "target": 0,
-        "percentChange": -27.3
+        "percentChange": -25.8
       },
       "monthlyBreakdown": [
         {
@@ -119,47 +119,47 @@ export const tillDateComparisonData: TillDateComparisonMainData = {
         },
         {
           "month": "Jun",
-          "currentCumulative": 7072,
+          "currentCumulative": 7217,
           "previousCumulative": 9727
         },
         {
           "month": "Jul",
-          "currentCumulative": 7072,
+          "currentCumulative": 7217,
           "previousCumulative": 11612
         },
         {
           "month": "Aug",
-          "currentCumulative": 7072,
+          "currentCumulative": 7217,
           "previousCumulative": 13264
         },
         {
           "month": "Sep",
-          "currentCumulative": 7072,
+          "currentCumulative": 7217,
           "previousCumulative": 14859
         },
         {
           "month": "Oct",
-          "currentCumulative": 7072,
+          "currentCumulative": 7217,
           "previousCumulative": 16217
         },
         {
           "month": "Nov",
-          "currentCumulative": 7072,
+          "currentCumulative": 7217,
           "previousCumulative": 17641
         },
         {
           "month": "Dec",
-          "currentCumulative": 7072,
+          "currentCumulative": 7217,
           "previousCumulative": 19126
         }
       ]
     },
     "partsRevenue": {
       "summary": {
-        "current": 76494041.23000002,
+        "current": 77732100.13000001,
         "previous": 92696652.66,
         "target": 0,
-        "percentChange": -17.48
+        "percentChange": -16.14
       },
       "monthlyBreakdown": [
         {
@@ -189,47 +189,47 @@ export const tillDateComparisonData: TillDateComparisonMainData = {
         },
         {
           "month": "Jun",
-          "currentCumulative": 76494041.23000002,
+          "currentCumulative": 77732100.13000001,
           "previousCumulative": 92696652.66
         },
         {
           "month": "Jul",
-          "currentCumulative": 76494041.23000002,
+          "currentCumulative": 77732100.13000001,
           "previousCumulative": 108471348.64999999
         },
         {
           "month": "Aug",
-          "currentCumulative": 76494041.23000002,
+          "currentCumulative": 77732100.13000001,
           "previousCumulative": 125761442.52999999
         },
         {
           "month": "Sep",
-          "currentCumulative": 76494041.23000002,
+          "currentCumulative": 77732100.13000001,
           "previousCumulative": 143599655.96999997
         },
         {
           "month": "Oct",
-          "currentCumulative": 76494041.23000002,
+          "currentCumulative": 77732100.13000001,
           "previousCumulative": 163307567.58999997
         },
         {
           "month": "Nov",
-          "currentCumulative": 76494041.23000002,
+          "currentCumulative": 77732100.13000001,
           "previousCumulative": 183280371.26999998
         },
         {
           "month": "Dec",
-          "currentCumulative": 76494041.23000002,
+          "currentCumulative": 77732100.13000001,
           "previousCumulative": 200061845.01
         }
       ]
     },
     "labourRevenue": {
       "summary": {
-        "current": 31419378.89,
+        "current": 32104710.09,
         "previous": 37669464.8,
         "target": 0,
-        "percentChange": -16.59
+        "percentChange": -14.77
       },
       "monthlyBreakdown": [
         {
@@ -259,47 +259,47 @@ export const tillDateComparisonData: TillDateComparisonMainData = {
         },
         {
           "month": "Jun",
-          "currentCumulative": 31419378.89,
+          "currentCumulative": 32104710.09,
           "previousCumulative": 37669464.8
         },
         {
           "month": "Jul",
-          "currentCumulative": 31419378.89,
+          "currentCumulative": 32104710.09,
           "previousCumulative": 44486863.93
         },
         {
           "month": "Aug",
-          "currentCumulative": 31419378.89,
+          "currentCumulative": 32104710.09,
           "previousCumulative": 50513238.67
         },
         {
           "month": "Sep",
-          "currentCumulative": 31419378.89,
+          "currentCumulative": 32104710.09,
           "previousCumulative": 56373524.82
         },
         {
           "month": "Oct",
-          "currentCumulative": 31419378.89,
+          "currentCumulative": 32104710.09,
           "previousCumulative": 62114722.96
         },
         {
           "month": "Nov",
-          "currentCumulative": 31419378.89,
+          "currentCumulative": 32104710.09,
           "previousCumulative": 70032988.06
         },
         {
           "month": "Dec",
-          "currentCumulative": 31419378.89,
+          "currentCumulative": 32104710.09,
           "previousCumulative": 77127012.65
         }
       ]
     },
     "accessoriesRevenue": {
       "summary": {
-        "current": 3516445.29,
+        "current": 3578619.29,
         "previous": 2614941.7800000003,
         "target": 0,
-        "percentChange": 34.48
+        "percentChange": 36.85
       },
       "monthlyBreakdown": [
         {
@@ -329,47 +329,47 @@ export const tillDateComparisonData: TillDateComparisonMainData = {
         },
         {
           "month": "Jun",
-          "currentCumulative": 3516445.29,
+          "currentCumulative": 3578619.29,
           "previousCumulative": 2614941.7800000003
         },
         {
           "month": "Jul",
-          "currentCumulative": 3516445.29,
+          "currentCumulative": 3578619.29,
           "previousCumulative": 3112242.5500000003
         },
         {
           "month": "Aug",
-          "currentCumulative": 3516445.29,
+          "currentCumulative": 3578619.29,
           "previousCumulative": 3471870.56
         },
         {
           "month": "Sep",
-          "currentCumulative": 3516445.29,
+          "currentCumulative": 3578619.29,
           "previousCumulative": 3934260.0
         },
         {
           "month": "Oct",
-          "currentCumulative": 3516445.29,
+          "currentCumulative": 3578619.29,
           "previousCumulative": 4217418.17
         },
         {
           "month": "Nov",
-          "currentCumulative": 3516445.29,
+          "currentCumulative": 3578619.29,
           "previousCumulative": 4547110.86
         },
         {
           "month": "Dec",
-          "currentCumulative": 3516445.29,
+          "currentCumulative": 3578619.29,
           "previousCumulative": 4885275.78
         }
       ]
     },
     "totalRevenue": {
       "summary": {
-        "current": 111429865.41000001,
+        "current": 113415429.51,
         "previous": 132981059.24,
         "target": 0,
-        "percentChange": -16.21
+        "percentChange": -14.71
       },
       "monthlyBreakdown": [
         {
@@ -399,37 +399,37 @@ export const tillDateComparisonData: TillDateComparisonMainData = {
         },
         {
           "month": "Jun",
-          "currentCumulative": 111429865.41000001,
+          "currentCumulative": 113415429.51,
           "previousCumulative": 132981059.24
         },
         {
           "month": "Jul",
-          "currentCumulative": 111429865.41000001,
+          "currentCumulative": 113415429.51,
           "previousCumulative": 156070455.13
         },
         {
           "month": "Aug",
-          "currentCumulative": 111429865.41000001,
+          "currentCumulative": 113415429.51,
           "previousCumulative": 179746551.76
         },
         {
           "month": "Sep",
-          "currentCumulative": 111429865.41000001,
+          "currentCumulative": 113415429.51,
           "previousCumulative": 203907440.79
         },
         {
           "month": "Oct",
-          "currentCumulative": 111429865.41000001,
+          "currentCumulative": 113415429.51,
           "previousCumulative": 229639708.72
         },
         {
           "month": "Nov",
-          "currentCumulative": 111429865.41000001,
+          "currentCumulative": 113415429.51,
           "previousCumulative": 257860470.19
         },
         {
           "month": "Dec",
-          "currentCumulative": 111429865.41000001,
+          "currentCumulative": 113415429.51,
           "previousCumulative": 282074133.44
         }
       ]
