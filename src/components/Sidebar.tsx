@@ -55,7 +55,7 @@ const Sidebar: React.FC<SidebarProps> = ({
     },
     { 
       id: 'advisor-performance', 
-      label: 'Advisor Performance', 
+      label: 'Customer Journey', 
       icon: <Users size={20} />, 
       view: 'advisor-performance' as DashboardView 
     },
