@@ -74,20 +74,20 @@ export const raw2025Data: Array<any> = [
     "bpAccessories": 16603.51
   },
   {
-    "month": "Jun",
-    "mechRo": {
-      "total": 729
+      "month": "Jun",
+      "mechRo": {
+        "total": 838
+      },
+      "bpRo": {
+        "total": 92
+      },
+      "mechParts": 5938428.48,
+      "bpParts": 3458065.2,
+      "mechLaborRevenue": 2158329.1100000003,
+      "bpLaborRevenue": 1490728.8399999999,
+      "mechAccessories": 373234.43,
+      "bpAccessories": 12366.28
     },
-    "bpRo": {
-      "total": 79
-    },
-    "mechParts": 5138230.5,
-    "bpParts": 3201234.77,
-    "mechLaborRevenue": 1885464.5999999999,
-    "bpLaborRevenue": 1315412.84,
-    "mechAccessories": 331771.88,
-    "bpAccessories": 10333.23
-  },
   {
     "month": "Mar",
     "mechRo": {
