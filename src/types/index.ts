@@ -221,3 +221,77 @@ export interface TransformedPredictionDataForChart {
   advisor_top3_revenue_actual?: number;
   advisor_top3_revenue_predicted?: number;
 }
+
+export interface DailyThroughput {
+  day: string;
+  checkIns: number;
+}
+
+export interface HourlyThroughput {
+  hour: number;
+  checkIns: number;
+}
+
+export interface GateInThroughputData {
+  byDay: {
+    thisWeek: DailyThroughput[];
+    lastWeek: DailyThroughput[];
+  };
+  byHour: {
+    thisWeek: HourlyThroughput[];
+    lastWeek: HourlyThroughput[];
+  };
+}
+
+export interface CheckInHeatmapData {
+  timeBins: string[];
+  weekdays: string[];
+  weeks: {
+    [week: string]: number[][];
+  };
+}
+
+// TypeScript Interfaces for Repeat Repair Analysis
+export interface RepairDateRange {
+    start: string;
+    end: string;
+}
+
+export interface RepairMetadata {
+    totalRecords: number;
+    uniqueVehicles: number;
+    invalidRecords: number;
+    dateRange: {
+        currentRepairs: RepairDateRange;
+        previousRepairs: RepairDateRange;
+    };
+}
+
+export interface RepairWarning {
+    type: string;
+    severity: string;
+    count: number;
+    examples: any[];
+}
+
+export interface WindowMetric {
+    total_repairs: number;
+    unique_vehicles: number;
+    avg_repair_duration: number;
+    categories: { [key: string]: number };
+    subcategories: { [key: string]: number };
+}
+
+export interface CohortMetric {
+    cohort: string;
+    total_vehicles: number;
+    window_metrics: WindowMetric[];
+}
+
+export interface RepairAnalysis {
+    metadata: RepairMetadata;
+    cohortMetrics: (CohortMetric | string[])[];
+    patterns: any;
+    validationMetrics: any;
+    warnings: RepairWarning[];
+}
