@@ -52,8 +52,8 @@ import {
   // previousYearData, // Corrected: From ../data/index.ts
 } from '../data';
 import { yearOnYearComparisonData, MonthlyComparisonData as YearOnYearMonthlyData } from '../data/yearOnYearComparisonData';
+import { yearOnYearComparisonData as kpiSourceData, raw2024Data, raw2025Data } from '../data/kpiCardData.ts';
 import { tillDateComparisonData } from '../data/tillDateComparisonData';
-import { raw2024Data, raw2025Data } from '../data/kpiCardData.ts';
 import { detailedRevenueBreakdownData, MonthlyRevenueBreakdownEntry } from '../data/revenueInsightsData';
 import { allServiceAdvisorYearlyPerformance, AdvisorMonthlyPerformance } from '../data/advisorPerformanceData';
 import { formatIndianCurrency } from '../utils/formatting';
@@ -297,14 +297,36 @@ const RevenueDashboard: React.FC = () => {
     };
     const currentMonthStr = monthMap[selectedMonth];
     
-    const mtdDataForMonth = tillDateComparisonData.mtd[currentMonthStr as keyof typeof tillDateComparisonData.mtd];
+    const dataForMonth = kpiSourceData.find(d => d.month === currentMonthStr);
 
-    if (mtdDataForMonth) {
+    if (dataForMonth) {
+      const yearKey = selectedYear.toString() as '2024' | '2025';
+
+      const currentThroughput = dataForMonth.throughput[yearKey] || 0;
+      const currentLabourRevenue = dataForMonth.labourRevenue[yearKey] || 0;
+      const currentPartsRevenue = dataForMonth.partsRevenue[yearKey] || 0;
+      const currentAccessoriesRevenue = dataForMonth.accessoriesRo[yearKey] || 0;
+      const currentTotalRevenue = currentPartsRevenue + currentLabourRevenue + currentAccessoriesRevenue;
+
+      let prevThroughput = 0;
+      let prevLabourRevenue = 0;
+      let prevPartsRevenue = 0;
+      let prevAccessoriesRevenue = 0;
+      let prevTotalRevenue = 0;
+
+      if (selectedYear === 2025 && dataForMonth.throughput['2024'] !== undefined) { 
+        prevThroughput = dataForMonth.throughput['2024'] || 0;
+        prevLabourRevenue = dataForMonth.labourRevenue['2024'] || 0;
+        prevPartsRevenue = dataForMonth.partsRevenue['2024'] || 0;
+        prevAccessoriesRevenue = dataForMonth.accessoriesRo['2024'] || 0;
+        prevTotalRevenue = prevPartsRevenue + prevLabourRevenue + prevAccessoriesRevenue;
+      }
+      
       setKpiCardValues({
-        throughput: { ...mtdDataForMonth.throughput },
-        labourRevenue: { ...mtdDataForMonth.labourRevenue },
-        partsRevenue: { ...mtdDataForMonth.partsRevenue },
-        totalRevenue: { ...mtdDataForMonth.totalRevenue },
+        throughput: { current: currentThroughput, previous: prevThroughput, percentChange: dataForMonth.throughput?.percentChange },
+        labourRevenue: { current: currentLabourRevenue, previous: prevLabourRevenue, percentChange: dataForMonth?.labourRevenue?.percentChange },
+        partsRevenue: { current: currentPartsRevenue, previous: prevPartsRevenue, percentChange: dataForMonth?.partsRevenue?.percentChange },
+        totalRevenue: { current: currentTotalRevenue, previous: prevTotalRevenue, percentChange: (prevTotalRevenue === 0) ? (currentTotalRevenue > 0 ? undefined : 0) : parseFloat((((currentTotalRevenue - prevTotalRevenue) / prevTotalRevenue) * 100).toFixed(2)) }
       });
 
       // Calculate and set breakdown values
@@ -366,14 +388,14 @@ const RevenueDashboard: React.FC = () => {
       }
 
       setChartDataSource({
-        throughput: mtdDataForMonth.throughput.current,
+        throughput: currentThroughput,
         labour: pieLabour,
         parts: pieParts,
         accessories: pieAccessories,
         lubricant: pieLubricant,
         vas: 0,
-        totalRevenue: mtdDataForMonth.totalRevenue.current,
-        serviceAdvisorCount: mtdDataForMonth.throughput.current
+        totalRevenue: currentTotalRevenue,
+        serviceAdvisorCount: currentThroughput
       });
 
     } else {
@@ -692,7 +714,7 @@ const RevenueDashboard: React.FC = () => {
                 tick={{ fill: '#6b7280', fontSize: 12 }}
                 axisLine={{ stroke: '#e5e7eb' }}
                 tickLine={false}
-                tickFormatter={(value) => new Intl.NumberFormat('en-IN').format(value)}
+                tickFormatter={(value) => `${value}`}
               />
               <Tooltip 
                 content={<CustomTooltip />} 
