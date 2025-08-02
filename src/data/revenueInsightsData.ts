@@ -39,7 +39,7 @@ export const detailedRevenueBreakdownData: MonthlyRevenueBreakdownEntry[] = [
           "target": 370500
         },
         "lubricant": {
-          "actual": 1166204.6800000002,
+          "actual": 1108463.51,
           "target": 1172500
         },
         "parts": {
@@ -57,7 +57,7 @@ export const detailedRevenueBreakdownData: MonthlyRevenueBreakdownEntry[] = [
           "target": 8777270.509
         },
         "accessories": {
-          "actual": 778562.6099999999,
+          "actual": 807392.85,
           "target": 1296074.537
         },
         "lubricant": {
@@ -65,7 +65,7 @@ export const detailedRevenueBreakdownData: MonthlyRevenueBreakdownEntry[] = [
           "target": 1051667.083
         },
         "parts": {
-          "actual": 12185462.34,
+          "actual": 12156632.1,
           "target": 15353730.3
         }
       }
@@ -84,15 +84,15 @@ export const detailedRevenueBreakdownData: MonthlyRevenueBreakdownEntry[] = [
           "target": 5853000
         },
         "accessories": {
-          "actual": 477555.76,
+          "actual": 502554.98000000004,
           "target": 370500
         },
         "lubricant": {
-          "actual": 1286430.76,
+          "actual": 1216253.3100000003,
           "target": 1172500
         },
         "parts": {
-          "actual": 16197576.8,
+          "actual": 16172577.580000002,
           "target": 13530000
         }
       },
@@ -133,15 +133,15 @@ export const detailedRevenueBreakdownData: MonthlyRevenueBreakdownEntry[] = [
           "target": 5853000
         },
         "accessories": {
-          "actual": 546080.5700000001,
+          "actual": 549509.3,
           "target": 370500
         },
         "lubricant": {
-          "actual": 1338339.45,
+          "actual": 1282127.7100000002,
           "target": 1172500
         },
         "parts": {
-          "actual": 16081024.669999998,
+          "actual": 16077595.939999996,
           "target": 13530000
         }
       },
@@ -155,7 +155,7 @@ export const detailedRevenueBreakdownData: MonthlyRevenueBreakdownEntry[] = [
           "target": 9070701.594999999
         },
         "accessories": {
-          "actual": 489350.52999999997,
+          "actual": 508570.6899999999,
           "target": 1277436.417
         },
         "lubricant": {
@@ -163,7 +163,7 @@ export const detailedRevenueBreakdownData: MonthlyRevenueBreakdownEntry[] = [
           "target": 1148117.776
         },
         "parts": {
-          "actual": 13259922.990000002,
+          "actual": 13240702.830000002,
           "target": 15049488.809
         }
       }
@@ -182,15 +182,15 @@ export const detailedRevenueBreakdownData: MonthlyRevenueBreakdownEntry[] = [
           "target": 5853000
         },
         "accessories": {
-          "actual": 384824.18,
+          "actual": 393043.67,
           "target": 370500
         },
         "lubricant": {
-          "actual": 1348949.4100000001,
+          "actual": 1276314.39,
           "target": 1172500
         },
         "parts": {
-          "actual": 15455954.740000002,
+          "actual": 15447735.250000002,
           "target": 13530000
         }
       },
@@ -200,11 +200,11 @@ export const detailedRevenueBreakdownData: MonthlyRevenueBreakdownEntry[] = [
           "target": 1468.518132
         },
         "labour": {
-          "actual": 5565809.98,
+          "actual": 5564809.98,
           "target": 9567427.968
         },
         "accessories": {
-          "actual": 615618.6100000001,
+          "actual": 630033.73,
           "target": 1447118.132
         },
         "lubricant": {
@@ -212,7 +212,7 @@ export const detailedRevenueBreakdownData: MonthlyRevenueBreakdownEntry[] = [
           "target": 1182566.319
         },
         "parts": {
-          "actual": 14229218.920000002,
+          "actual": 14214803.8,
           "target": 16729160.085
         }
       }
@@ -235,7 +235,7 @@ export const detailedRevenueBreakdownData: MonthlyRevenueBreakdownEntry[] = [
           "target": 370500
         },
         "lubricant": {
-          "actual": 1259840.91,
+          "actual": 1194934.92,
           "target": 1172500
         },
         "parts": {
@@ -245,23 +245,23 @@ export const detailedRevenueBreakdownData: MonthlyRevenueBreakdownEntry[] = [
       },
       "2025": {
         "throughput": {
-          "actual": 1373,
+          "actual": 1366,
           "target": 1448.650183
         },
         "labour": {
-          "actual": 5682885.129999999,
+          "actual": 5608926.629999999,
           "target": 9451595.786
         },
         "accessories": {
-          "actual": 708579.85,
+          "actual": 714666.7999999999,
           "target": 1427450.183
         },
         "lubricant": {
-          "actual": 998963.99,
+          "actual": 980452.0700000001,
           "target": 1165985.165
         },
         "parts": {
-          "actual": 16446006.86,
+          "actual": 16060227.93,
           "target": 16527043.862
         }
       }
@@ -280,7 +280,7 @@ export const detailedRevenueBreakdownData: MonthlyRevenueBreakdownEntry[] = [
           "target": 5853000
         },
         "accessories": {
-          "actual": 443470.26,
+          "actual": 466468.99,
           "target": 370500
         },
         "lubricant": {
@@ -288,29 +288,29 @@ export const detailedRevenueBreakdownData: MonthlyRevenueBreakdownEntry[] = [
           "target": 1172500
         },
         "parts": {
-          "actual": 13315769.57,
+          "actual": 13292770.84,
           "target": 13530000
         }
       },
       "2025": {
         "throughput": {
-          "actual": 808,
+          "actual": 1386,
           "target": 1538.611521
         },
         "labour": {
-          "actual": 3200877.44,
+          "actual": 5502706.16,
           "target": 10476829.539
         },
         "accessories": {
-          "actual": 342105.11,
+          "actual": 667258.5700000001,
           "target": 1513211.521
         },
         "lubricant": {
-          "actual": 562078.21,
+          "actual": 905517.2999999999,
           "target": 1219650.369
         },
         "parts": {
-          "actual": 8339465.27,
+          "actual": 14235486.329999998,
           "target": 18333355.829
         }
       }
@@ -329,37 +329,37 @@ export const detailedRevenueBreakdownData: MonthlyRevenueBreakdownEntry[] = [
           "target": 5853000
         },
         "accessories": {
-          "actual": 497300.77,
+          "actual": 532094.0,
           "target": 370500
         },
         "lubricant": {
-          "actual": 1370826.2999999998,
+          "actual": 1368309.3499999999,
           "target": 1172500
         },
         "parts": {
-          "actual": 15774695.989999998,
+          "actual": 15739902.760000002,
           "target": 13530000
         }
       },
       "2025": {
         "throughput": {
-          "actual": 0,
+          "actual": 1316,
           "target": 1708.780555
         },
         "labour": {
-          "actual": 0,
+          "actual": 5898249.18,
           "target": 11436556.387
         },
         "accessories": {
-          "actual": 0,
+          "actual": 1043957.0600000002,
           "target": 1681880.555
         },
         "lubricant": {
-          "actual": 0,
+          "actual": 863300.08,
           "target": 1363052.5
         },
         "parts": {
-          "actual": 0,
+          "actual": 14876903.120000001,
           "target": 20006865.14
         }
       }
@@ -378,7 +378,7 @@ export const detailedRevenueBreakdownData: MonthlyRevenueBreakdownEntry[] = [
           "target": 5853000
         },
         "accessories": {
-          "actual": 359628.0099999999,
+          "actual": 384310.30999999994,
           "target": 370500
         },
         "lubricant": {
@@ -386,29 +386,29 @@ export const detailedRevenueBreakdownData: MonthlyRevenueBreakdownEntry[] = [
           "target": 1172500
         },
         "parts": {
-          "actual": 17290093.88,
+          "actual": 17265411.58,
           "target": 13530000
         }
       },
       "2025": {
         "throughput": {
-          "actual": 0,
+          "actual": 42,
           "target": 1647.355452
         },
         "labour": {
-          "actual": 0,
+          "actual": 137997.5,
           "target": 11096428.442
         },
         "accessories": {
-          "actual": 0,
+          "actual": 8867.61,
           "target": 1620955.452
         },
         "lubricant": {
-          "actual": 0,
+          "actual": 28619.61,
           "target": 1311019.906
         },
         "parts": {
-          "actual": 0,
+          "actual": 266958.26,
           "target": 19413998.11
         }
       }
@@ -427,7 +427,7 @@ export const detailedRevenueBreakdownData: MonthlyRevenueBreakdownEntry[] = [
           "target": 5853000
         },
         "accessories": {
-          "actual": 462389.44,
+          "actual": 477713.80999999994,
           "target": 370500
         },
         "lubricant": {
@@ -435,7 +435,7 @@ export const detailedRevenueBreakdownData: MonthlyRevenueBreakdownEntry[] = [
           "target": 1172500
         },
         "parts": {
-          "actual": 17838213.439999998,
+          "actual": 17822889.069999997,
           "target": 13530000
         }
       },
@@ -476,7 +476,7 @@ export const detailedRevenueBreakdownData: MonthlyRevenueBreakdownEntry[] = [
           "target": 5853000
         },
         "accessories": {
-          "actual": 283158.17,
+          "actual": 337413.13000000006,
           "target": 370500
         },
         "lubricant": {
@@ -484,7 +484,7 @@ export const detailedRevenueBreakdownData: MonthlyRevenueBreakdownEntry[] = [
           "target": 1172500
         },
         "parts": {
-          "actual": 19707911.620000005,
+          "actual": 19653656.660000004,
           "target": 13530000
         }
       },
@@ -574,7 +574,7 @@ export const detailedRevenueBreakdownData: MonthlyRevenueBreakdownEntry[] = [
           "target": 5853000
         },
         "accessories": {
-          "actual": 338164.9199999999,
+          "actual": 342969.95999999996,
           "target": 370500
         },
         "lubricant": {
@@ -582,7 +582,7 @@ export const detailedRevenueBreakdownData: MonthlyRevenueBreakdownEntry[] = [
           "target": 1172500
         },
         "parts": {
-          "actual": 16781473.740000002,
+          "actual": 16776668.7,
           "target": 13530000
         }
       },

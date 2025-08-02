@@ -24,6 +24,21 @@ const raw2025Data: Array<any> = [
       "bpAccessories": 45918.770000000004
     },
     {
+      "month": "Aug",
+      "mechRo": {
+        "total": 39
+      },
+      "bpRo": {
+        "total": 3
+      },
+      "mechParts": 179668.30000000002,
+      "bpParts": 87289.96,
+      "mechLaborRevenue": 108997.5,
+      "bpLaborRevenue": 29000.0,
+      "mechAccessories": 8867.61,
+      "bpAccessories": 0.0
+    },
+    {
       "month": "Feb",
       "mechRo": {
         "total": 1124
@@ -56,17 +71,17 @@ const raw2025Data: Array<any> = [
     {
       "month": "Jul",
       "mechRo": {
-        "total": 988
+        "total": 1141
       },
       "bpRo": {
-        "total": 136
+        "total": 175
       },
-      "mechParts": 6416211.470000001,
-      "bpParts": 4127928.4199999995,
-      "mechLaborRevenue": 2759370.82,
-      "bpLaborRevenue": 2268931.38,
-      "mechAccessories": 878533.2799999999,
-      "bpAccessories": 16235.64
+      "mechParts": 7289609.430000002,
+      "bpParts": 7587293.6899999995,
+      "mechLaborRevenue": 3007312.82,
+      "bpLaborRevenue": 2890936.3600000003,
+      "mechAccessories": 1016640.1400000001,
+      "bpAccessories": 27316.92
     },
     {
       "month": "Jun",
@@ -116,7 +131,7 @@ const raw2025Data: Array<any> = [
 ];
 
 const raw2024Data: Array<any> = [
- {
+    {
       "month": "Apr",
       "mechRo": {
         "total": 1529
