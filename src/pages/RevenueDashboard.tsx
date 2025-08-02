@@ -52,8 +52,8 @@ import {
   // previousYearData, // Corrected: From ../data/index.ts
 } from '../data';
 import { yearOnYearComparisonData, MonthlyComparisonData as YearOnYearMonthlyData } from '../data/yearOnYearComparisonData';
-import { yearOnYearComparisonData as kpiSourceData, raw2024Data, raw2025Data } from '../data/kpiCardData.ts';
-import { tillDateComparisonData } from '../data/tillDateComparisonData';
+import { raw2024Data, raw2025Data } from '../data/kpiCardData.ts';
+import { tillDateComparisonData, MtdKpiMetricSet } from '../data/tillDateComparisonData';
 import { detailedRevenueBreakdownData, MonthlyRevenueBreakdownEntry } from '../data/revenueInsightsData';
 import { allServiceAdvisorYearlyPerformance, AdvisorMonthlyPerformance } from '../data/advisorPerformanceData';
 import { formatIndianCurrency } from '../utils/formatting';
@@ -297,36 +297,42 @@ const RevenueDashboard: React.FC = () => {
     };
     const currentMonthStr = monthMap[selectedMonth];
     
-    const dataForMonth = kpiSourceData.find(d => d.month === currentMonthStr);
+    const dataForMonth: MtdKpiMetricSet | undefined = tillDateComparisonData.mtd[currentMonthStr];
 
     if (dataForMonth) {
-      const yearKey = selectedYear.toString() as '2024' | '2025';
+      const currentThroughput = dataForMonth.throughput.current;
+      const prevThroughput = dataForMonth.throughput.previous;
 
-      const currentThroughput = dataForMonth.throughput[yearKey] || 0;
-      const currentLabourRevenue = dataForMonth.labourRevenue[yearKey] || 0;
-      const currentPartsRevenue = dataForMonth.partsRevenue[yearKey] || 0;
-      const currentAccessoriesRevenue = dataForMonth.accessoriesRo[yearKey] || 0;
-      const currentTotalRevenue = currentPartsRevenue + currentLabourRevenue + currentAccessoriesRevenue;
+      const currentLabourRevenue = dataForMonth.labourRevenue.current;
+      const prevLabourRevenue = dataForMonth.labourRevenue.previous;
 
-      let prevThroughput = 0;
-      let prevLabourRevenue = 0;
-      let prevPartsRevenue = 0;
-      let prevAccessoriesRevenue = 0;
-      let prevTotalRevenue = 0;
+      const currentPartsRevenue = dataForMonth.partsRevenue.current;
+      const prevPartsRevenue = dataForMonth.partsRevenue.previous;
 
-      if (selectedYear === 2025 && dataForMonth.throughput['2024'] !== undefined) { 
-        prevThroughput = dataForMonth.throughput['2024'] || 0;
-        prevLabourRevenue = dataForMonth.labourRevenue['2024'] || 0;
-        prevPartsRevenue = dataForMonth.partsRevenue['2024'] || 0;
-        prevAccessoriesRevenue = dataForMonth.accessoriesRo['2024'] || 0;
-        prevTotalRevenue = prevPartsRevenue + prevLabourRevenue + prevAccessoriesRevenue;
-      }
-      
+      const currentTotalRevenue = dataForMonth.totalRevenue.current;
+      const prevTotalRevenue = dataForMonth.totalRevenue.previous;
+
       setKpiCardValues({
-        throughput: { current: currentThroughput, previous: prevThroughput, percentChange: dataForMonth.throughput?.percentChange },
-        labourRevenue: { current: currentLabourRevenue, previous: prevLabourRevenue, percentChange: dataForMonth?.labourRevenue?.percentChange },
-        partsRevenue: { current: currentPartsRevenue, previous: prevPartsRevenue, percentChange: dataForMonth?.partsRevenue?.percentChange },
-        totalRevenue: { current: currentTotalRevenue, previous: prevTotalRevenue, percentChange: (prevTotalRevenue === 0) ? (currentTotalRevenue > 0 ? undefined : 0) : parseFloat((((currentTotalRevenue - prevTotalRevenue) / prevTotalRevenue) * 100).toFixed(2)) }
+        throughput: { 
+          current: currentThroughput, 
+          previous: prevThroughput, 
+          percentChange: dataForMonth.throughput.percentChange 
+        },
+        labourRevenue: { 
+          current: currentLabourRevenue, 
+          previous: prevLabourRevenue, 
+          percentChange: dataForMonth.labourRevenue.percentChange 
+        },
+        partsRevenue: { 
+          current: currentPartsRevenue, 
+          previous: prevPartsRevenue, 
+          percentChange: dataForMonth.partsRevenue.percentChange 
+        },
+        totalRevenue: { 
+          current: currentTotalRevenue, 
+          previous: prevTotalRevenue, 
+          percentChange: dataForMonth.totalRevenue.percentChange 
+        }
       });
 
       // Calculate and set breakdown values
