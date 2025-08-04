@@ -46,16 +46,16 @@ export const raw2025Data: Array<any> = [
   {
     "month": "Aug",
     "mechRo": {
-      "total": 39
+      "total": 136
     },
     "bpRo": {
-      "total": 3
+      "total": 8
     },
-    "mechParts": 179668.30000000002,
-    "bpParts": 87289.96,
-    "mechLaborRevenue": 108997.5,
-    "bpLaborRevenue": 29000.0,
-    "mechAccessories": 8867.61,
+    "mechParts": 744914.3699999999,
+    "bpParts": 208065.50000000003,
+    "mechLaborRevenue": 349697.0,
+    "bpLaborRevenue": 124746.0,
+    "mechAccessories": 54349.64,
     "bpAccessories": 0.0
   },
   {
@@ -91,15 +91,15 @@ export const raw2025Data: Array<any> = [
   {
     "month": "Jul",
     "mechRo": {
-      "total": 1141
+      "total": 1140
     },
     "bpRo": {
-      "total": 175
+      "total": 173
     },
-    "mechParts": 7289609.430000002,
-    "bpParts": 7587293.6899999995,
-    "mechLaborRevenue": 3007312.82,
-    "bpLaborRevenue": 2890936.3600000003,
+    "mechParts": 7287420.420000001,
+    "bpParts": 7546139.609999999,
+    "mechLaborRevenue": 3006612.82,
+    "bpLaborRevenue": 2840181.3600000003,
     "mechAccessories": 1016640.1400000001,
     "bpAccessories": 27316.92
   },

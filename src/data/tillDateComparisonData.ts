@@ -86,10 +86,10 @@ export const tillDateComparisonData: TillDateComparisonMainData = {
   "ytd": {
     "throughput": {
       "summary": {
-        "current": 9146,
+        "current": 9245,
         "previous": 13264,
         "target": 0,
-        "percentChange": -31.05
+        "percentChange": -30.3
       },
       "monthlyBreakdown": [
         {
@@ -124,42 +124,42 @@ export const tillDateComparisonData: TillDateComparisonMainData = {
         },
         {
           "month": "Jul",
-          "currentCumulative": 9104,
+          "currentCumulative": 9101,
           "previousCumulative": 11612
         },
         {
           "month": "Aug",
-          "currentCumulative": 9146,
+          "currentCumulative": 9245,
           "previousCumulative": 13264
         },
         {
           "month": "Sep",
-          "currentCumulative": 9146,
+          "currentCumulative": 9245,
           "previousCumulative": 14859
         },
         {
           "month": "Oct",
-          "currentCumulative": 9146,
+          "currentCumulative": 9245,
           "previousCumulative": 16217
         },
         {
           "month": "Nov",
-          "currentCumulative": 9146,
+          "currentCumulative": 9245,
           "previousCumulative": 17641
         },
         {
           "month": "Dec",
-          "currentCumulative": 9146,
+          "currentCumulative": 9245,
           "previousCumulative": 19126
         }
       ]
     },
     "partsRevenue": {
       "summary": {
-        "current": 98323738.12,
+        "current": 98966416.64,
         "previous": 125642320.83000001,
         "target": 0,
-        "percentChange": -21.74
+        "percentChange": -21.23
       },
       "monthlyBreakdown": [
         {
@@ -194,42 +194,42 @@ export const tillDateComparisonData: TillDateComparisonMainData = {
         },
         {
           "month": "Jul",
-          "currentCumulative": 98056779.86,
+          "currentCumulative": 98013436.77,
           "previousCumulative": 108376909.25000001
         },
         {
           "month": "Aug",
-          "currentCumulative": 98323738.12,
+          "currentCumulative": 98966416.64,
           "previousCumulative": 125642320.83000001
         },
         {
           "month": "Sep",
-          "currentCumulative": 98323738.12,
+          "currentCumulative": 98966416.64,
           "previousCumulative": 143465209.9
         },
         {
           "month": "Oct",
-          "currentCumulative": 98323738.12,
+          "currentCumulative": 98966416.64,
           "previousCumulative": 163118866.56
         },
         {
           "month": "Nov",
-          "currentCumulative": 98323738.12,
+          "currentCumulative": 98966416.64,
           "previousCumulative": 183091670.24
         },
         {
           "month": "Dec",
-          "currentCumulative": 98323738.12,
+          "currentCumulative": 98966416.64,
           "previousCumulative": 199868338.94
         }
       ]
     },
     "labourRevenue": {
       "summary": {
-        "current": 40367826.99,
+        "current": 40652817.49,
         "previous": 50513238.67,
         "target": 0,
-        "percentChange": -20.08
+        "percentChange": -19.52
       },
       "monthlyBreakdown": [
         {
@@ -264,42 +264,42 @@ export const tillDateComparisonData: TillDateComparisonMainData = {
         },
         {
           "month": "Jul",
-          "currentCumulative": 40229829.49,
+          "currentCumulative": 40178374.49,
           "previousCumulative": 44486863.93
         },
         {
           "month": "Aug",
-          "currentCumulative": 40367826.99,
+          "currentCumulative": 40652817.49,
           "previousCumulative": 50513238.67
         },
         {
           "month": "Sep",
-          "currentCumulative": 40367826.99,
+          "currentCumulative": 40652817.49,
           "previousCumulative": 56373524.82
         },
         {
           "month": "Oct",
-          "currentCumulative": 40367826.99,
+          "currentCumulative": 40652817.49,
           "previousCumulative": 62114722.96
         },
         {
           "month": "Nov",
-          "currentCumulative": 40367826.99,
+          "currentCumulative": 40652817.49,
           "previousCumulative": 70032988.06
         },
         {
           "month": "Dec",
-          "currentCumulative": 40367826.99,
+          "currentCumulative": 40652817.49,
           "previousCumulative": 77127012.65
         }
       ]
     },
     "accessoriesRevenue": {
       "summary": {
-        "current": 5025149.890000001,
+        "current": 5070631.92,
         "previous": 3590992.2600000002,
         "target": 0,
-        "percentChange": 39.94
+        "percentChange": 41.2
       },
       "monthlyBreakdown": [
         {
@@ -339,37 +339,37 @@ export const tillDateComparisonData: TillDateComparisonMainData = {
         },
         {
           "month": "Aug",
-          "currentCumulative": 5025149.890000001,
+          "currentCumulative": 5070631.92,
           "previousCumulative": 3590992.2600000002
         },
         {
           "month": "Sep",
-          "currentCumulative": 5025149.890000001,
+          "currentCumulative": 5070631.92,
           "previousCumulative": 4068706.0700000003
         },
         {
           "month": "Oct",
-          "currentCumulative": 5025149.890000001,
+          "currentCumulative": 5070631.92,
           "previousCumulative": 4406119.2
         },
         {
           "month": "Nov",
-          "currentCumulative": 5025149.890000001,
+          "currentCumulative": 5070631.92,
           "previousCumulative": 4735811.890000001
         },
         {
           "month": "Dec",
-          "currentCumulative": 5025149.890000001,
+          "currentCumulative": 5070631.92,
           "previousCumulative": 5078781.850000001
         }
       ]
     },
     "totalRevenue": {
       "summary": {
-        "current": 143716715.0,
+        "current": 144689866.05,
         "previous": 179746551.76,
         "target": 0,
-        "percentChange": -20.04
+        "percentChange": -19.5
       },
       "monthlyBreakdown": [
         {
@@ -404,32 +404,32 @@ export const tillDateComparisonData: TillDateComparisonMainData = {
         },
         {
           "month": "Jul",
-          "currentCumulative": 143302891.63,
+          "currentCumulative": 143208093.54000002,
           "previousCumulative": 156070455.13
         },
         {
           "month": "Aug",
-          "currentCumulative": 143716715.0,
+          "currentCumulative": 144689866.05,
           "previousCumulative": 179746551.76
         },
         {
           "month": "Sep",
-          "currentCumulative": 143716715.0,
+          "currentCumulative": 144689866.05,
           "previousCumulative": 203907440.79
         },
         {
           "month": "Oct",
-          "currentCumulative": 143716715.0,
+          "currentCumulative": 144689866.05,
           "previousCumulative": 229639708.72
         },
         {
           "month": "Nov",
-          "currentCumulative": 143716715.0,
+          "currentCumulative": 144689866.05,
           "previousCumulative": 257860470.19
         },
         {
           "month": "Dec",
-          "currentCumulative": 143716715.0,
+          "currentCumulative": 144689866.05,
           "previousCumulative": 282074133.44
         }
       ]
@@ -438,22 +438,22 @@ export const tillDateComparisonData: TillDateComparisonMainData = {
   "mtd": {
     "Jan": {
       "throughput": {
-        "current": 13,
-        "previous": 26,
+        "current": 44,
+        "previous": 74,
         "target": 0,
-        "percentChange": -50.0
+        "percentChange": -40.54
       },
       "partsRevenue": {
-        "current": 87263.98,
-        "previous": 16039.659999999998,
+        "current": 163136.25,
+        "previous": 575591.44,
         "target": 0,
-        "percentChange": 444.05
+        "percentChange": -71.66
       },
       "labourRevenue": {
-        "current": 24845.0,
-        "previous": 23039.0,
+        "current": 57160.0,
+        "previous": 211634.0,
         "target": 0,
-        "percentChange": 7.84
+        "percentChange": -72.99
       },
       "accessoriesRevenue": {
         "current": 0,
@@ -462,30 +462,30 @@ export const tillDateComparisonData: TillDateComparisonMainData = {
         "percentChange": 0.0
       },
       "totalRevenue": {
-        "current": 112108.98,
-        "previous": 39078.659999999996,
+        "current": 220296.25,
+        "previous": 787225.44,
         "target": 0,
-        "percentChange": 186.88
+        "percentChange": -72.02
       }
     },
     "Feb": {
       "throughput": {
-        "current": 9,
-        "previous": 38,
+        "current": 28,
+        "previous": 96,
         "target": 0,
-        "percentChange": -76.32
+        "percentChange": -70.83
       },
       "partsRevenue": {
-        "current": 47147.68,
-        "previous": 147754.53999999998,
+        "current": 454120.4900000001,
+        "previous": 403829.15,
         "target": 0,
-        "percentChange": -68.09
+        "percentChange": 12.45
       },
       "labourRevenue": {
-        "current": 13210.0,
-        "previous": 92670.5,
+        "current": 171820.5,
+        "previous": 196902.0,
         "target": 0,
-        "percentChange": -85.75
+        "percentChange": -12.74
       },
       "accessoriesRevenue": {
         "current": 0,
@@ -494,30 +494,30 @@ export const tillDateComparisonData: TillDateComparisonMainData = {
         "percentChange": 0.0
       },
       "totalRevenue": {
-        "current": 60357.68,
-        "previous": 240425.03999999998,
+        "current": 625940.9900000001,
+        "previous": 600731.15,
         "target": 0,
-        "percentChange": -74.9
+        "percentChange": 4.2
       }
     },
     "Mar": {
       "throughput": {
-        "current": 13,
-        "previous": 23,
+        "current": 44,
+        "previous": 84,
         "target": 0,
-        "percentChange": -43.48
+        "percentChange": -47.62
       },
       "partsRevenue": {
-        "current": 261409.51999999996,
-        "previous": 192863.74000000002,
+        "current": 354989.5199999999,
+        "previous": 571195.13,
         "target": 0,
-        "percentChange": 35.54
+        "percentChange": -37.85
       },
       "labourRevenue": {
-        "current": 73832.0,
-        "previous": 115148.0,
+        "current": 163392.0,
+        "previous": 335491.48,
         "target": 0,
-        "percentChange": -35.88
+        "percentChange": -51.3
       },
       "accessoriesRevenue": {
         "current": 0,
@@ -526,30 +526,30 @@ export const tillDateComparisonData: TillDateComparisonMainData = {
         "percentChange": 0.0
       },
       "totalRevenue": {
-        "current": 335241.51999999996,
-        "previous": 308011.74,
+        "current": 518381.5199999999,
+        "previous": 906686.61,
         "target": 0,
-        "percentChange": 8.84
+        "percentChange": -42.83
       }
     },
     "Apr": {
       "throughput": {
-        "current": 11,
-        "previous": 19,
+        "current": 31,
+        "previous": 89,
         "target": 0,
-        "percentChange": -42.11
+        "percentChange": -65.17
       },
       "partsRevenue": {
-        "current": 39137.729999999996,
-        "previous": 296719.02,
+        "current": 136546.91,
+        "previous": 744701.2100000001,
         "target": 0,
-        "percentChange": -86.81
+        "percentChange": -81.66
       },
       "labourRevenue": {
-        "current": 17965.0,
-        "previous": 167861.0,
+        "current": 65755.0,
+        "previous": 432312.01,
         "target": 0,
-        "percentChange": -89.3
+        "percentChange": -84.79
       },
       "accessoriesRevenue": {
         "current": 0,
@@ -558,30 +558,30 @@ export const tillDateComparisonData: TillDateComparisonMainData = {
         "percentChange": 0.0
       },
       "totalRevenue": {
-        "current": 57102.729999999996,
-        "previous": 464580.02,
+        "current": 202301.91,
+        "previous": 1177013.2200000002,
         "target": 0,
-        "percentChange": -87.71
+        "percentChange": -82.81
       }
     },
     "May": {
       "throughput": {
-        "current": 6,
-        "previous": 36,
+        "current": 25,
+        "previous": 91,
         "target": 0,
-        "percentChange": -83.33
+        "percentChange": -72.53
       },
       "partsRevenue": {
-        "current": 3996.63,
-        "previous": 239130.09999999998,
+        "current": 356366.72,
+        "previous": 514061.11,
         "target": 0,
-        "percentChange": -98.33
+        "percentChange": -30.68
       },
       "labourRevenue": {
-        "current": 10075.0,
-        "previous": 166659.0,
+        "current": 87480.75,
+        "previous": 408060.5,
         "target": 0,
-        "percentChange": -93.95
+        "percentChange": -78.56
       },
       "accessoriesRevenue": {
         "current": 0,
@@ -590,30 +590,30 @@ export const tillDateComparisonData: TillDateComparisonMainData = {
         "percentChange": 0.0
       },
       "totalRevenue": {
-        "current": 14071.630000000001,
-        "previous": 405789.1,
+        "current": 443847.47,
+        "previous": 922121.61,
         "target": 0,
-        "percentChange": -96.53
+        "percentChange": -51.87
       }
     },
     "Jun": {
       "throughput": {
-        "current": 23,
-        "previous": 15,
+        "current": 44,
+        "previous": 59,
         "target": 0,
-        "percentChange": 53.33
+        "percentChange": -25.42
       },
       "partsRevenue": {
-        "current": 57978.200000000004,
-        "previous": 75456.96,
+        "current": 237193.12,
+        "previous": 410032.64,
         "target": 0,
-        "percentChange": -23.16
+        "percentChange": -42.15
       },
       "labourRevenue": {
-        "current": 25370.0,
-        "previous": 39446.5,
+        "current": 88645.0,
+        "previous": 200423.5,
         "target": 0,
-        "percentChange": -35.69
+        "percentChange": -55.77
       },
       "accessoriesRevenue": {
         "current": 0,
@@ -622,30 +622,30 @@ export const tillDateComparisonData: TillDateComparisonMainData = {
         "percentChange": 0.0
       },
       "totalRevenue": {
-        "current": 83348.20000000001,
-        "previous": 114903.46,
+        "current": 325838.12,
+        "previous": 610456.14,
         "target": 0,
-        "percentChange": -27.46
+        "percentChange": -46.62
       }
     },
     "Jul": {
       "throughput": {
-        "current": 4,
-        "previous": 23,
+        "current": 27,
+        "previous": 77,
         "target": 0,
-        "percentChange": -82.61
+        "percentChange": -64.94
       },
       "partsRevenue": {
-        "current": 20393.86,
-        "previous": 152888.72999999998,
+        "current": 183392.26,
+        "previous": 407894.70999999996,
         "target": 0,
-        "percentChange": -86.66
+        "percentChange": -55.04
       },
       "labourRevenue": {
-        "current": 4500.0,
-        "previous": 57710.0,
+        "current": 77382.5,
+        "previous": 198503.5,
         "target": 0,
-        "percentChange": -92.2
+        "percentChange": -61.02
       },
       "accessoriesRevenue": {
         "current": 0,
@@ -654,30 +654,30 @@ export const tillDateComparisonData: TillDateComparisonMainData = {
         "percentChange": 0.0
       },
       "totalRevenue": {
-        "current": 24893.86,
-        "previous": 210598.72999999998,
+        "current": 260774.76,
+        "previous": 606398.21,
         "target": 0,
-        "percentChange": -88.18
+        "percentChange": -57.0
       }
     },
     "Aug": {
       "throughput": {
-        "current": 14,
-        "previous": 14,
+        "current": 52,
+        "previous": 67,
         "target": 0,
-        "percentChange": 0.0
+        "percentChange": -22.39
       },
       "partsRevenue": {
-        "current": 96130.21,
-        "previous": 31887.71,
+        "current": 274949.85,
+        "previous": 203844.31000000003,
         "target": 0,
-        "percentChange": 201.46
+        "percentChange": 34.88
       },
       "labourRevenue": {
-        "current": 43455,
-        "previous": 20972.5,
+        "current": 199161,
+        "previous": 149426.5,
         "target": 0,
-        "percentChange": 107.2
+        "percentChange": 33.28
       },
       "accessoriesRevenue": {
         "current": 0,
@@ -686,28 +686,28 @@ export const tillDateComparisonData: TillDateComparisonMainData = {
         "percentChange": 0.0
       },
       "totalRevenue": {
-        "current": 139585.21000000002,
-        "previous": 52860.21,
+        "current": 474110.85,
+        "previous": 353270.81000000006,
         "target": 0,
-        "percentChange": 164.06
+        "percentChange": 34.21
       }
     },
     "Sep": {
       "throughput": {
         "current": 0,
-        "previous": 19,
+        "previous": 60,
         "target": 0,
         "percentChange": -100.0
       },
       "partsRevenue": {
         "current": 0,
-        "previous": 24920.87,
+        "previous": 254272.24,
         "target": 0,
         "percentChange": -100.0
       },
       "labourRevenue": {
         "current": 0,
-        "previous": 34125.0,
+        "previous": 157127.5,
         "target": 0,
         "percentChange": -100.0
       },
@@ -719,7 +719,7 @@ export const tillDateComparisonData: TillDateComparisonMainData = {
       },
       "totalRevenue": {
         "current": 0,
-        "previous": 59045.869999999995,
+        "previous": 411399.74,
         "target": 0,
         "percentChange": -100.0
       }
@@ -727,19 +727,19 @@ export const tillDateComparisonData: TillDateComparisonMainData = {
     "Oct": {
       "throughput": {
         "current": 0,
-        "previous": 19,
+        "previous": 50,
         "target": 0,
         "percentChange": -100.0
       },
       "partsRevenue": {
         "current": 0,
-        "previous": 32581.1,
+        "previous": 367366.21,
         "target": 0,
         "percentChange": -100.0
       },
       "labourRevenue": {
         "current": 0,
-        "previous": 18827.5,
+        "previous": 119929.0,
         "target": 0,
         "percentChange": -100.0
       },
@@ -751,7 +751,7 @@ export const tillDateComparisonData: TillDateComparisonMainData = {
       },
       "totalRevenue": {
         "current": 0,
-        "previous": 51408.6,
+        "previous": 487295.21,
         "target": 0,
         "percentChange": -100.0
       }
@@ -759,21 +759,21 @@ export const tillDateComparisonData: TillDateComparisonMainData = {
     "Nov": {
       "throughput": {
         "current": 0,
-        "previous": 0,
+        "previous": 3,
         "target": 0,
-        "percentChange": 0.0
+        "percentChange": -100.0
       },
       "partsRevenue": {
         "current": 0,
-        "previous": 0,
+        "previous": 284.75,
         "target": 0,
-        "percentChange": 0.0
+        "percentChange": -100.0
       },
       "labourRevenue": {
         "current": 0,
-        "previous": 0,
+        "previous": 1600.0,
         "target": 0,
-        "percentChange": 0.0
+        "percentChange": -100.0
       },
       "accessoriesRevenue": {
         "current": 0,
@@ -783,27 +783,27 @@ export const tillDateComparisonData: TillDateComparisonMainData = {
       },
       "totalRevenue": {
         "current": 0,
-        "previous": 0,
+        "previous": 1884.75,
         "target": 0,
-        "percentChange": 0.0
+        "percentChange": -100.0
       }
     },
     "Dec": {
       "throughput": {
         "current": 0,
-        "previous": 14,
+        "previous": 40,
         "target": 0,
         "percentChange": -100.0
       },
       "partsRevenue": {
         "current": 0,
-        "previous": 33589.42,
+        "previous": 125465.67,
         "target": 0,
         "percentChange": -100.0
       },
       "labourRevenue": {
         "current": 0,
-        "previous": 55079.5,
+        "previous": 134505.5,
         "target": 0,
         "percentChange": -100.0
       },
@@ -815,7 +815,7 @@ export const tillDateComparisonData: TillDateComparisonMainData = {
       },
       "totalRevenue": {
         "current": 0,
-        "previous": 88668.92,
+        "previous": 259971.16999999998,
         "target": 0,
         "percentChange": -100.0
       }
